@@ -6,11 +6,14 @@
 
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::GameFrame),
+    ui(new Ui::GameFrame), scene(-200, -200, 400, 400),
     isStarted(false), isPaused(false), isFinished(false),
     curKey(""), score(0)
 {
     ui->setupUi(this);
+    ui->graphicsView->setScene(&scene);
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    ui->graphicsView->setBackgroundBrush(QColor(230, 200, 167));
 }
 
 GameFrame::~GameFrame()
@@ -18,13 +21,16 @@ GameFrame::~GameFrame()
     delete ui;
 }
 
-void GameFrame::setStart()
+void GameFrame::setStart()  // game entrance
 {
     isStarted = true;
     isPaused = false;
     isFinished = false;
     curKey = "";
     score = 0;
+    scene.clear();
+    scene.addEllipse(-100, -100, 200, 200);
+    scene.addRect(50, 50, 10, 10);
 }
 
 void GameFrame::togglePause()
@@ -41,12 +47,8 @@ double GameFrame::getScore() const
 
 void GameFrame::paintEvent(QPaintEvent *event)  // paint game frame
 {
-    QPainter painter(this);
-    QRect rect = contentsRect();
-    QPoint size(50, 40);
-    QRect textRect(rect.center() - size / 2, rect.center() + size / 2);
-    painter.drawText(textRect, curKey);
-
+//    qDebug() << "GameFrame::paintEvent()";
+    ui->labelStatus->setText(QString("You've pressed: %0").arg(curKey));
     QFrame::paintEvent(event);
 }
 
@@ -55,16 +57,16 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
     // todo
     assert(isStarted);
     switch (event->key()) {
-    case Qt::Key_Left:
+    case Qt::Key_A:
         putKey("←");
         break;
-    case Qt::Key_Right:
+    case Qt::Key_D:
         putKey("→");
         break;
-    case Qt::Key_Down:
+    case Qt::Key_S:
         putKey("↓");
         break;
-    case Qt::Key_Up:
+    case Qt::Key_W:
         putKey("↑");
         break;
     case Qt::Key_Space:

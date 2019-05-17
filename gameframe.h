@@ -37,7 +37,7 @@ protected:
 private:
     Ui::GameFrame *ui;
 
-    QGraphicsScene *scene;
+    QGraphicsScene scene;
 
     bool isStarted, isPaused, isFinished;
     QString curKey; // current key pressed

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Game Stat</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -34,8 +34,8 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>321</width>
-     <height>192</height>
+     <width>341</width>
+     <height>201</height>
     </rect>
    </property>
   </widget>
