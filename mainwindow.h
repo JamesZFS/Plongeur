@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QCloseEvent>
 #include "gameframe.h"
 #include "statdialog.h"
@@ -22,14 +22,10 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-
     void on_actionPlay_triggered();
-
     void on_actionHelp_triggered();
-
     void on_actionQuit_triggered();
-
-    void handleGameEnd();
+    void onGameEnd();
 
 private:
     Ui::MainWindow *ui;

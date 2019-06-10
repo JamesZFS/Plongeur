@@ -26,18 +26,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    gameframe.cpp \
-    statdialog.cpp
+        gameframe.cpp \
+        statdialog.cpp \
+    gamescene.cpp \
+    constants.cpp \
+    actor.cpp \
+    diver.cpp
 
 HEADERS += \
         mainwindow.h \
-    gameframe.h \
-    statdialog.h
+        gameframe.h \
+        statdialog.h \
+    gamescene.h \
+    constants.h \
+    actor.h \
+    diver.h
 
 FORMS += \
         mainwindow.ui \
-    gameframe.ui \
-    statdialog.ui
+        gameframe.ui \
+        statdialog.ui
 
 RESOURCES += \
-    res.qrc
+        res.qrc
+
+INCLUDEPATH += \
+    /Users/james/Test/liquidfun-master/liquidfun/Box2D
+
+LIBS += \
+    /Users/james/Test/liquidfun-master/liquidfun/Box2D/Box2D/Debug/libliquidfun.a

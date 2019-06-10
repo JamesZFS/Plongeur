@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btHelp, &QPushButton::clicked, ui->actionHelp, &QAction::trigger);
     connect(ui->btQuit, &QPushButton::clicked, ui->actionQuit, &QAction::trigger);
 
-    connect(&gameFrame, &GameFrame::closed, this, &MainWindow::handleGameEnd);
+    connect(&gameFrame, &GameFrame::closed, this, &MainWindow::onGameEnd);
 }
 
 MainWindow::~MainWindow()
@@ -42,9 +42,9 @@ void MainWindow::on_actionQuit_triggered()
     close();
 }
 
-void MainWindow::handleGameEnd()
+void MainWindow::onGameEnd()
 {
-    qDebug("handleGameEnd()");
+    qDebug("onGameEnd()");
     statDialog = new StatDialog(gameFrame.getScore());
     statDialog->show();
 }

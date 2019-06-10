@@ -2,7 +2,8 @@
 #define GAMEFRAME_H
 
 #include <QFrame>
-#include <QGraphicsScene>
+
+class GameScene;
 
 namespace Ui {
 class GameFrame;
@@ -17,6 +18,8 @@ public:
     ~GameFrame();
 
     void setStart();    // start the game
+
+    void setEnd();
 
     void togglePause(); // pause / continue
 
@@ -36,12 +39,11 @@ protected:
 
 private:
     Ui::GameFrame *ui;
+    GameScene *m_scene;
+    QString m_cur_key; // current key pressed
+    double m_score;
 
-    QGraphicsScene scene;
-
-    bool isStarted, isPaused, isFinished;
-    QString curKey; // current key pressed
-    double score;
+    bool m_is_started, m_is_finished, m_is_paused;
 
     void putKey(const QString &key);
 
