@@ -31,7 +31,8 @@ SOURCES += \
     gamescene.cpp \
     constants.cpp \
     actor.cpp \
-    diver.cpp
+    diver.cpp \
+    pool.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     gamescene.h \
     constants.h \
     actor.h \
-    diver.h
+    diver.h \
+    pool.h
 
 FORMS += \
         mainwindow.ui \
@@ -50,6 +52,8 @@ FORMS += \
 RESOURCES += \
         res.qrc
 
+# *** the below is the INCLUDE PATH and LIBRARY PATH of liquidfun, you should
+# change it to the liquidfun path on your computer, or the compilation won't work.
 INCLUDEPATH += \
     /Users/james/Test/liquidfun-master/liquidfun/Box2D
 

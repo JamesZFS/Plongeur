@@ -25,7 +25,7 @@ class Actor : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Actor(b2Body *const body);
+    explicit Actor(b2Body *body);
     virtual ~Actor();
     // QGraphicsItem interface
     QRectF boundingRect() const override;

@@ -6,14 +6,14 @@
 class DiverPart : public Actor
 {
 public:
-    DiverPart(b2Body *const body);
+    DiverPart(b2Body *body);
 };
 
 
 class DiverHead : public DiverPart
 {
 public:
-    DiverHead(b2Body *const body);
+    DiverHead(b2Body *body);
 
 private:
     qreal m_r;
@@ -28,7 +28,7 @@ public:
 class DiverTorso : public DiverPart
 {
 public:
-    DiverTorso(b2Body *const body);
+    DiverTorso(b2Body *body);
 
     // QGraphicsItem interface
 public:
@@ -40,7 +40,7 @@ public:
 class DiverLimb : public DiverPart
 {
 public:
-    DiverLimb(b2Body *const body);
+    DiverLimb(b2Body *body);
 
     // QGraphicsItem interface
 public:

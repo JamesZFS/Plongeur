@@ -5,7 +5,7 @@
 #include <QtMath>
 
 
-Actor::Actor(b2Body * const body) : m_body(body)
+Actor::Actor(b2Body *body) : m_body(body)
 {
     Q_ASSERT(body->GetFixtureList() == nullptr);
     // body's fixture should be initialized in the Actor's subclasses' constructor

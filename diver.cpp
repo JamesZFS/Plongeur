@@ -4,7 +4,7 @@
 #include <QPainter>
 
 
-DiverPart::DiverPart(b2Body * const body) : Actor(body)
+DiverPart::DiverPart(b2Body *body) : Actor(body)
 {
     body->SetType(b2_dynamicBody);
     body->SetLinearDamping(c_diver_linear_damping);
@@ -13,7 +13,7 @@ DiverPart::DiverPart(b2Body * const body) : Actor(body)
 }
 
 
-DiverHead::DiverHead(b2Body * const body) : DiverPart(body)
+DiverHead::DiverHead(b2Body *body) : DiverPart(body)
 {
     b2FixtureDef def;
     // head fixture params:
@@ -68,9 +68,9 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     m_r_leg.setParentItem(this);
 }
 
-DiverTorso::DiverTorso(b2Body * const body) : DiverPart(body)
+DiverTorso::DiverTorso(b2Body *body) : DiverPart(body)
 {
-// todo
+// todo create the fixtures of torso, see DiverHead::DiverHead for example
 }
 
 QRectF DiverTorso::boundingRect() const
@@ -87,9 +87,9 @@ void DiverTorso::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 //    Actor::paint(painter, option, widget);
 }
 
-DiverLimb::DiverLimb(b2Body * const body) : DiverPart(body)
+DiverLimb::DiverLimb(b2Body *body) : DiverPart(body)
 {
-// todo
+// todo create the fixtures of limb, see DiverHead::DiverHead for example
 }
 
 QRectF DiverLimb::boundingRect() const
