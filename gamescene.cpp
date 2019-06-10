@@ -14,6 +14,14 @@ GameScene::~GameScene()
     delete m_diver;
 }
 
+void GameScene::clear()
+{
+    QGraphicsScene::clear();
+    delete m_world;
+    m_world = new b2World(c_gravity);
+    m_diver = nullptr;
+}
+
 void GameScene::createDiver(const b2Vec2 &pos)
 {
     Q_ASSERT(!m_diver); // diver should only be created once

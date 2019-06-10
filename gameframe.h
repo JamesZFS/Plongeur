@@ -43,7 +43,7 @@ private:
     QString m_cur_key; // current key pressed
     double m_score;
 
-    bool m_is_started, m_is_finished, m_is_paused;
+    bool m_is_started, m_is_paused, m_is_finished;
 
     void putKey(const QString &key);
 

@@ -15,10 +15,13 @@ class DiverHead : public DiverPart
 public:
     DiverHead(b2Body *const body);
 
+private:
+    qreal m_r;
+
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;    
 };
 
 
@@ -53,9 +56,13 @@ public:
     Diver(QVector<b2Body *> part_bodies);  // initialize via 6 empty bodies created by b2world
 
 private:
-    void setPos() {}  // hiding
-    void setRotation() {}   // hiding
+    // hiding methods:
+    void setPos() {}
+    void setRotation() {}
+    void setScale() {}
+    void setTransform() {}
 
+    // private data:
     DiverHead m_head;
     DiverTorso m_torso;
     DiverLimb m_l_arm, m_r_arm;

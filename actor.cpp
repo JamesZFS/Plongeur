@@ -13,7 +13,6 @@ Actor::Actor(b2Body * const body) : m_body(body)
     body->SetLinearDamping(c_actor_linear_damping);
     body->SetAngularDamping(c_actor_angular_damping);
     body->SetGravityScale(1);
-    body->SetTransform(c_world_center, 0);
 }
 
 Actor::~Actor()

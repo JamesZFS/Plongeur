@@ -15,6 +15,7 @@ public:
     GameScene();
     ~GameScene();
 
+    void clear();
     void createDiver(const b2Vec2 &pos);
 
 private:

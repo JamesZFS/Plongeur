@@ -8,18 +8,20 @@
 
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent), ui(new Ui::GameFrame),
-    m_scene(nullptr),
+    m_scene(new GameScene),
     m_cur_key(""), m_score(0),
     m_is_started(false), m_is_paused(false), m_is_finished(false)
 {
     ui->setupUi(this);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
+    ui->graphicsView->scale(2, 2);
 }
 
 GameFrame::~GameFrame()
 {
     delete ui;
+    delete m_scene;
 }
 
 void GameFrame::setStart()  // game entrance
@@ -29,7 +31,6 @@ void GameFrame::setStart()  // game entrance
     m_is_finished = false;
     m_cur_key = "";
     m_score = 0;
-    m_scene = new GameScene;
     ui->graphicsView->setScene(m_scene);
     m_scene->createDiver(b2Vec2_zero);
 }
@@ -37,8 +38,7 @@ void GameFrame::setStart()  // game entrance
 void GameFrame::setEnd()
 {
     m_is_finished = true;
-    ui->graphicsView->setScene(nullptr);
-    m_scene->deleteLater();
+    m_scene->clear();
 }
 
 void GameFrame::togglePause()
@@ -95,7 +95,6 @@ void GameFrame::keyReleaseEvent(QKeyEvent *event)
 void GameFrame::closeEvent(QCloseEvent *event)
 {
     setEnd();
-    m_is_finished = true;
     emit closed();
     event->accept();
 }

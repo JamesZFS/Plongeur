@@ -36,8 +36,11 @@ protected:
     b2Body *const m_body;   // weak pointer to its b2body
 
 private:
-    void setPos() {}  // hiding
-    void setRotation() {}   // hiding
+    // hiding methods:
+    void setPos() {}
+    void setRotation() {}
+    void setScale() {}
+    void setTransform() {}
 
 };
 
