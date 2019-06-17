@@ -16,6 +16,20 @@ GameFrame::GameFrame(QWidget *parent) :
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
+    connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
+        m_scene->syncSimulate(0.5);
+        ui->bt_sync->setEnabled(false);
+        ui->bt_async->setEnabled(false);
+    });
+    connect(ui->bt_async, &QPushButton::clicked, this, [this](){
+        m_scene->asyncSimulate(0.5);
+        ui->bt_sync->setEnabled(false);
+        ui->bt_async->setEnabled(false);
+    });
+    connect(m_scene, &GameScene::simulationFinished, this, [this](){
+        ui->bt_sync->setEnabled(true);
+        ui->bt_async->setEnabled(true);
+    });
 }
 
 GameFrame::~GameFrame()
@@ -32,7 +46,7 @@ void GameFrame::setStart()  // game entrance
     m_cur_key = "";
     m_score = 0;
     ui->graphicsView->setScene(m_scene);
-    m_scene->createDiver(b2Vec2_zero);
+    m_scene->createDiver({1, 1});
 }
 
 void GameFrame::setEnd()

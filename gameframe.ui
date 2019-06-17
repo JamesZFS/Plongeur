@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>459</width>
-    <height>495</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,13 +20,27 @@
    <item row="0" column="0">
     <widget class="QGraphicsView" name="graphicsView"/>
    </item>
-   <item row="1" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="labelStatus">
      <property name="text">
       <string>Status</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="bt_sync">
+     <property name="text">
+      <string>Sync Simulation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="bt_async">
+     <property name="text">
+      <string>Async Simulation</string>
      </property>
     </widget>
    </item>

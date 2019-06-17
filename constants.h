@@ -17,4 +17,10 @@ extern const float32 c_diver_density;
 extern const float32 c_diver_friction;
 extern const float32 c_diver_restitution;
 
+extern const float32 c_time_step;
+extern const int32 c_velocity_iterations;
+extern const int32 c_position_iterations;
+extern const int32 c_particle_iterations;
+
+
 #endif // CONSTANTS_H
