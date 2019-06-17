@@ -32,6 +32,8 @@ signals:
 private:
     b2World *m_world;
     Diver *m_diver;
+    
+    
     Engine *m_engine;
     QTimer m_timer;
 };

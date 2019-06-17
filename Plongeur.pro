@@ -33,7 +33,8 @@ SOURCES += \
     actor.cpp \
     diver.cpp \
     pool.cpp \
-    engine.cpp
+    engine.cpp \
+    water.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
     actor.h \
     diver.h \
     pool.h \
-    engine.h
+    engine.h \
+    water.h
 
 FORMS += \
         mainwindow.ui \
