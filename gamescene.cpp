@@ -5,22 +5,18 @@
 
 
 GameScene::GameScene() :
-    m_world(new b2World(c_gravity)), m_diver(nullptr),
+    m_world(new b2World(c_gravity)),
+    m_pool(nullptr), m_diver(nullptr),
     m_engine(new Engine(m_world))
 {
     setSceneRect(QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right)));
     connect(m_engine, SIGNAL(stepped()), this, SLOT(advance()));
-    connect(&m_timer, SIGNAL(timeout()), m_engine, SLOT(stopSimulation()));
-    connect(&m_timer, &QTimer::timeout, this, [this](){
-        emit simulationFinished();
-    });
 }
 
 GameScene::~GameScene()
 {
     delete m_world;
     delete m_engine;
-    delete m_diver;
 }
 
 void GameScene::clear()
@@ -28,7 +24,18 @@ void GameScene::clear()
     QGraphicsScene::clear();
     delete m_world;
     m_world = new b2World(c_gravity);
+    m_pool = nullptr;
     m_diver = nullptr;
+}
+
+void GameScene::createPool()
+{
+    Q_ASSERT(!m_pool);
+    b2BodyDef def;
+    def.position = {0, 0};
+    m_pool = new Pool(m_world->CreateBody(&def));
+    addItem(m_pool);
+    advance();
 }
 
 void GameScene::createDiver(const b2Vec2 &pos)
@@ -46,20 +53,17 @@ void GameScene::createDiver(const b2Vec2 &pos)
     advance();
 }
 
-void GameScene::asyncSimulate(float32 duration)
+void GameScene::stopSimulation()
 {
-    Q_ASSERT(!m_timer.isActive());
-    m_timer.setInterval(duration * 1000);
-    m_timer.setSingleShot(true);
-    m_engine->syncSimulate();
-    m_timer.start();
+    m_engine->stopSimulation();
 }
 
-void GameScene::syncSimulate(float32 duration)
+void GameScene::asyncSimulate()
 {
-    Q_ASSERT(!m_timer.isActive());
-    m_timer.setInterval(duration * 1000);
-    m_timer.setSingleShot(true);
     m_engine->syncSimulate();
-    m_timer.start();
+}
+
+void GameScene::syncSimulate()
+{
+    m_engine->syncSimulate();
 }

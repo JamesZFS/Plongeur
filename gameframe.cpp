@@ -13,22 +13,27 @@ GameFrame::GameFrame(QWidget *parent) :
     m_is_started(false), m_is_paused(false), m_is_finished(false)
 {
     ui->setupUi(this);
+    ui->bt_stop->setEnabled(false);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
     connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
-        m_scene->syncSimulate(0.5);
+        m_scene->syncSimulate();
         ui->bt_sync->setEnabled(false);
         ui->bt_async->setEnabled(false);
+        ui->bt_stop->setEnabled(true);
     });
     connect(ui->bt_async, &QPushButton::clicked, this, [this](){
-        m_scene->asyncSimulate(0.5);
+        m_scene->asyncSimulate();
         ui->bt_sync->setEnabled(false);
         ui->bt_async->setEnabled(false);
+        ui->bt_stop->setEnabled(true);
     });
-    connect(m_scene, &GameScene::simulationFinished, this, [this](){
+    connect(ui->bt_stop, &QPushButton::clicked, this, [this](){
+        m_scene->stopSimulation();
         ui->bt_sync->setEnabled(true);
         ui->bt_async->setEnabled(true);
+        ui->bt_stop->setEnabled(false);
     });
 }
 
@@ -46,7 +51,8 @@ void GameFrame::setStart()  // game entrance
     m_cur_key = "";
     m_score = 0;
     ui->graphicsView->setScene(m_scene);
-    m_scene->createDiver({1, 1});
+    m_scene->createDiver({5, 1});
+    m_scene->createPool();
 }
 
 void GameFrame::setEnd()

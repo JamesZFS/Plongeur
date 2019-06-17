@@ -3,9 +3,9 @@
 
 #include "constants.h"
 #include "diver.h"
+#include "pool.h"
 
 #include <QGraphicsScene>
-#include <QTimer>
 
 class b2World;
 class Engine;
@@ -19,21 +19,20 @@ public:
     ~GameScene();
 
     void clear();
+    void createPool();
     void createDiver(const b2Vec2 &pos);
     void createWater(const b2PolygonShape &shape);
 
 public slots:
-    void asyncSimulate(float32 duration);   // sec
-    void syncSimulate(float32 duration);
-
-signals:
-    void simulationFinished();
+    void asyncSimulate();
+    void syncSimulate();
+    void stopSimulation();
 
 private:
     b2World *m_world;
+    Pool *m_pool;
     Diver *m_diver;
     Engine *m_engine;
-    QTimer m_timer;
 };
 
 #endif // GAMESCENE_H

@@ -29,7 +29,9 @@ class DiverTorso : public DiverPart
 {
 public:
     DiverTorso(b2Body *body);
-
+private:
+    qreal m_theight;
+    qreal m_twidth;
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
@@ -43,11 +45,25 @@ public:
     DiverLimb(b2Body *body);
 
     // QGraphicsItem interface
+private:
+    qreal m_theight;
+    qreal m_twidth;
 public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
+class DiverArm : public DiverPart
+{
+public:
+    DiverArm(b2Body *body);
+private:
+    qreal m_theight;
+    qreal m_twidth;
+public:
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+};
 
 // Diver is just an aggregation of 6 DiverParts
 class Diver : public QGraphicsObject
@@ -65,7 +81,7 @@ private:
     // private data:
     DiverHead m_head;
     DiverTorso m_torso;
-    DiverLimb m_l_arm, m_r_arm;
+    DiverArm m_l_arm, m_r_arm;
     DiverLimb m_l_leg, m_r_leg;
 
     // QGraphicsItem interface
