@@ -55,7 +55,7 @@ RESOURCES += \
 # *** the below is the INCLUDE PATH and LIBRARY PATH of liquidfun, you should
 # change it to the liquidfun path on your computer, or the compilation won't work.
 INCLUDEPATH += \
-    /Users/james/Test/liquidfun-master/liquidfun/Box2D
+    /Users/rachelmao/Desktop/liquidfun-master/liquidfun/Box2D
 
 LIBS += \
-    /Users/james/Test/liquidfun-master/liquidfun/Box2D/Box2D/Debug/libliquidfun.a
+    /Users/rachelmao/Desktop/liquidfun-master/liquidfun/Box2D/Box2D/Debug/libliquidfun.a
