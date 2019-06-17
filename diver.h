@@ -3,8 +3,11 @@
 
 #include "actor.h"
 
+class Diver;
+
 class DiverPart : public Actor
 {
+    friend class Diver;
 public:
     DiverPart(b2Body *body);
 };
@@ -21,7 +24,7 @@ private:
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;    
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 
@@ -35,14 +38,14 @@ private:
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 
-class DiverLimb : public DiverPart
+class DiverLeg : public DiverPart
 {
 public:
-    DiverLimb(b2Body *body);
+    DiverLeg(b2Body *body);
 
     // QGraphicsItem interface
 private:
@@ -50,7 +53,7 @@ private:
     qreal m_twidth;
 public:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 class DiverArm : public DiverPart
@@ -62,7 +65,7 @@ private:
     qreal m_twidth;
 public:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 // Diver is just an aggregation of 6 DiverParts
@@ -82,7 +85,7 @@ private:
     DiverHead m_head;
     DiverTorso m_torso;
     DiverArm m_l_arm, m_r_arm;
-    DiverLimb m_l_leg, m_r_leg;
+    DiverLeg m_l_leg, m_r_leg;
 
     // QGraphicsItem interface
 public:

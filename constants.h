@@ -22,5 +22,8 @@ extern const int32 c_velocity_iterations;
 extern const int32 c_position_iterations;
 extern const int32 c_particle_iterations;
 
+extern const uint16 c_head_category;
+extern const uint16 c_limb_category;
+
 
 #endif // CONSTANTS_H

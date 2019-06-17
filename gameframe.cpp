@@ -51,7 +51,7 @@ void GameFrame::setStart()  // game entrance
     m_cur_key = "";
     m_score = 0;
     ui->graphicsView->setScene(m_scene);
-    m_scene->createDiver({5, 1});
+    m_scene->createDiver({5, 3});
     m_scene->createPool();
 }
 

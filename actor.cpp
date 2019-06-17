@@ -58,7 +58,8 @@ QRectF getBoundingRectFromB2(const b2Body *body)
         case b2Shape::e_circle: {
             auto circle = (b2CircleShape*)fixture->GetShape();
             qreal r = scaleFromB2(circle->m_radius);
-            fix_bound = QRectF(-r, -r, 2*r, 2*r);
+            QPointF c = mapFromB2(circle->m_p);
+            fix_bound = QRectF(c - QPointF(r, r), c + QPointF(r, r));
             break;
         }
         case b2Shape::e_polygon: {
@@ -82,7 +83,8 @@ void drawB2Fixtures(const b2Fixture *fixture_list, QPainter *painter)
         case b2Shape::e_circle: {
             auto circle = (b2CircleShape*)fixture->GetShape();
             qreal r = scaleFromB2(circle->m_radius);
-            painter->drawEllipse({}, r, r);
+            QPointF c = mapFromB2(circle->m_p);
+            painter->drawEllipse(c, r, r);
             break;
         }
         case b2Shape::e_polygon: {
