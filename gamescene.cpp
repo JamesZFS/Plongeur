@@ -2,11 +2,12 @@
 #include "engine.h"
 
 #include <Box2D/Box2D.h>
+#include <QDebug>
 
 
 GameScene::GameScene() :
     m_world(new b2World(c_gravity)),
-    m_pool(nullptr), m_diver(nullptr),
+    m_pool(nullptr), m_diver(nullptr), m_water(nullptr),
     m_engine(new Engine(m_world))
 {
     setSceneRect(QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right)));
@@ -53,6 +54,53 @@ void GameScene::createDiver(const b2Vec2 &pos)
     advance();
 }
 
+void GameScene::createWater(const b2Shape &shape, const b2Vec2 &pos)
+{
+    Q_ASSERT(!m_water);
+    b2ParticleSystemDef def;
+    m_water = new Water(m_world->CreateParticleSystem(&def), shape, pos);
+    addItem(m_water);
+    advance();
+}
+
+Actor *GameScene::createDebugBall(const b2Vec2 &pos)
+{
+    bool flag = m_engine->isBusy();
+    if (flag) {
+        qDebug() << "busy!";
+        m_engine->stopSimulation();
+        m_engine->wait(1000);
+    }
+    b2BodyDef def;
+    def.position = pos;
+    def.type = b2_dynamicBody;
+    auto body = m_world->CreateBody(&def);
+    auto ball = new Actor(body);
+    b2CircleShape shape;
+    shape.m_radius = 0.2;
+    body->CreateFixture(&shape, 2.0);
+    if (flag)
+        m_engine->asyncSimulate();
+    addItem(ball);
+    advance();
+    return ball;
+}
+
+void GameScene::destroyActor(Actor *actor)
+{
+    bool flag = m_engine->isBusy();
+    if (flag) {
+        m_engine->stopSimulation();
+        m_engine->wait(1000);
+    }
+    removeItem(actor);
+    m_world->DestroyBody(actor->m_body);
+    delete actor;
+    advance();
+    if (flag)
+        m_engine->asyncSimulate();
+}
+
 void GameScene::stopSimulation()
 {
     m_engine->stopSimulation();
@@ -60,7 +108,7 @@ void GameScene::stopSimulation()
 
 void GameScene::asyncSimulate()
 {
-    m_engine->syncSimulate();
+    m_engine->asyncSimulate();
 }
 
 void GameScene::syncSimulate()

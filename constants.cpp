@@ -24,3 +24,7 @@ const int32 c_particle_iterations = 4;
 
 const uint16 c_head_category = 1 << 1;
 const uint16 c_limb_category = 1 << 2;
+
+const float32 c_water_particle_radius = 0.5f;
+const float32 c_water_density = 1.0f;
+const float32 c_water_damping = 0.4f;

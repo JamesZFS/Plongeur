@@ -14,10 +14,10 @@ class Engine : public QThread
 public:
     Engine(b2World *world);
     ~Engine();
+    bool isBusy();
 
 signals:
     void stepped(); // emitted after every call of stepWorld()
-    void stopAsync();   // temporary signal
 
 public slots:
     void syncSimulate();    // in main thread
@@ -35,7 +35,7 @@ protected:
 private:
     b2World *m_world;
     QTimer *m_timer;
-
+    bool m_should_stop; // shared memory
 };
 
 #endif // ENGINE_H

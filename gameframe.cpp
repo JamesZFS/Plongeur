@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QPainter>
 #include <QtEvents>
+#include <QGraphicsSceneMouseEvent>
+
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent), ui(new Ui::GameFrame),
@@ -17,6 +20,8 @@ GameFrame::GameFrame(QWidget *parent) :
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
+
+    m_scene->installEventFilter(this);
     connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
         m_scene->syncSimulate();
         ui->bt_sync->setEnabled(false);
@@ -53,6 +58,9 @@ void GameFrame::setStart()  // game entrance
     ui->graphicsView->setScene(m_scene);
     m_scene->createDiver({5, 3});
     m_scene->createPool();
+    b2PolygonShape shape;
+    shape.SetAsBox(0.6*c_world_width, 0.2*c_world_height);
+    m_scene->createWater(shape, {0.5f*c_world_width, 0.6f*c_world_height});
 }
 
 void GameFrame::setEnd()
@@ -124,4 +132,24 @@ void GameFrame::putKey(const QString &key)
     m_cur_key = key;
     ++m_score;    // score up
     update();
+}
+
+void GameFrame::on_bt_remove_ball_clicked()
+{
+    if (m_balls.isEmpty())
+        return;
+    m_scene->destroyActor(m_balls.pop());
+}
+
+bool GameFrame::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_scene && event->type() == QEvent::GraphicsSceneMousePress) {
+        auto me = (QGraphicsSceneMouseEvent*) event;
+        auto pos = mapToB2(me->scenePos());
+        qDebug() << "mouse clicked at" << pos.x << pos.y;
+        // add debug ball
+        auto ball = m_scene->createDebugBall(pos);
+        m_balls.push(ball);
+    }
+    return QFrame::eventFilter(watched, event);
 }

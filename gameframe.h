@@ -2,8 +2,10 @@
 #define GAMEFRAME_H
 
 #include <QFrame>
+#include <QStack>
 
 class GameScene;
+class Actor;
 
 namespace Ui {
 class GameFrame;
@@ -37,6 +39,11 @@ protected:
 
     void closeEvent(QCloseEvent *event) override;
 
+    void putKey(const QString &key);
+
+private slots:
+    void on_bt_remove_ball_clicked();
+
 private:
     Ui::GameFrame *ui;
     GameScene *m_scene;
@@ -45,8 +52,11 @@ private:
 
     bool m_is_started, m_is_paused, m_is_finished;
 
-    void putKey(const QString &key);
+    QStack<Actor*> m_balls; // for debug
 
+    // QObject interface
+public:
+    bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
 #endif // GAMEFRAME_H
