@@ -24,7 +24,7 @@ private:
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 
@@ -35,10 +35,10 @@ public:
 private:
     qreal m_theight;
     qreal m_twidth;
-    // QGraphicsItem interface
+//     QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 
@@ -53,7 +53,7 @@ private:
     qreal m_twidth;
 public:
     QRectF boundingRect() const override;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 class DiverArm : public DiverPart
@@ -65,7 +65,7 @@ private:
     qreal m_twidth;
 public:
     QRectF boundingRect() const override;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 // Diver is just an aggregation of 6 DiverParts
