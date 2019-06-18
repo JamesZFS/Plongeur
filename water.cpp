@@ -4,6 +4,7 @@
 #include <Box2D/Box2D.h>
 #include <QPainter>
 #include <QRandomGenerator>
+#include <QDebug>
 
 Water::Water(b2ParticleSystem *particle_system, const b2Shape &water_shape, const b2Vec2 &pos) :
     m_particle_system(particle_system)
@@ -17,11 +18,18 @@ Water::Water(b2ParticleSystem *particle_system, const b2Shape &water_shape, cons
     def.shape = &water_shape;
     def.position = pos;
     m_particle_group = particle_system->CreateParticleGroup(def);
+    qDebug() << "water count" << m_particle_system->GetParticleCount();
+    m_pts = new QPointF[2*m_particle_system->GetParticleCount()];
 
     updateBoundingRect();
     m_timer.setInterval(1000);
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(updateBoundingRect()));
     m_timer.start();
+}
+
+Water::~Water()
+{
+    delete[] m_pts;
 }
 
 void Water::updateBoundingRect()
@@ -40,16 +48,17 @@ QRectF Water::boundingRect() const
     return m_bbox;
 }
 
-void Water::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Water::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->setPen(Qt::NoPen);
-    painter->setOpacity(0.7);
-    painter->setBrush(QColor(150, 190, 250));
+    static const qreal r = 1.5*scaleFromB2(m_particle_system->GetRadius());
+    static const QPen pen(QColor(150, 190, 250), r, Qt::SolidLine);
+    painter->setPen(pen);
+    painter->setOpacity(0.5f);
     b2Vec2 *pos = m_particle_system->GetPositionBuffer();
-    auto r = scaleFromB2(m_particle_system->GetRadius());
     for (int i = 0; i < m_particle_system->GetParticleCount(); ++i) {
-        painter->drawEllipse(mapFromB2(pos[i]), r, r);
+        m_pts[i] = mapFromB2(pos[i]);
     }
+    painter->drawPoints(m_pts, m_particle_system->GetParticleCount());
 }
 
 void Water::advance(int phase)

@@ -16,6 +16,7 @@ class Water : public QGraphicsObject
     Q_OBJECT
 public:
     Water(b2ParticleSystem *particle_system, const b2Shape &water_shape, const b2Vec2 &pos);
+    ~Water();
 
 private slots:
     void updateBoundingRect();
@@ -25,12 +26,12 @@ private:
     b2ParticleGroup *m_particle_group;
     QRectF m_bbox;
     QTimer m_timer;
+    QPointF *m_pts;
 
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     void advance(int phase) override;
 };
 
