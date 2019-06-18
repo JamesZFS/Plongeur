@@ -10,8 +10,9 @@ GameScene::GameScene() :
     m_pool(nullptr), m_diver(nullptr), m_water(nullptr),
     m_engine(new Engine(m_world))
 {
+//    setItemIndexMethod(QGraphicsScene::NoIndex);
     setSceneRect(QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right)));
-    connect(m_engine, SIGNAL(stepped()), this, SLOT(advance()));
+    connect(m_engine, SIGNAL(stepped()), this, SLOT(advance()), Qt::QueuedConnection);
 }
 
 GameScene::~GameScene()
@@ -25,8 +26,11 @@ void GameScene::clear()
     QGraphicsScene::clear();
     delete m_world;
     m_world = new b2World(c_gravity);
+    delete m_pool;
     m_pool = nullptr;
+    delete m_diver;
     m_diver = nullptr;
+    delete m_water;
 }
 
 void GameScene::createPool()
@@ -67,7 +71,6 @@ Actor *GameScene::createDebugBall(const b2Vec2 &pos)
 {
     bool flag = m_engine->isBusy();
     if (flag) {
-        qDebug() << "busy!";
         m_engine->stopSimulation();
         m_engine->wait(1000);
     }

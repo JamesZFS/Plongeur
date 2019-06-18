@@ -54,7 +54,6 @@ void Engine::stepWorld()
 {
     if (m_should_stop) {
         m_should_stop = false;
-        qDebug() << "should stop: " << QThread::currentThreadId();
         destroyTimer();
         quit();
         return;

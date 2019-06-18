@@ -40,7 +40,7 @@ Pool::Pool(b2Body *body) : Actor(body)
     }
 
     m_bbox = QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right));
-    m_bbox += QMarginsF(1, 1, 1, 1);
+    m_bbox += QMarginsF(5, 5, 5, 5);
 }
 
 void Pool::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

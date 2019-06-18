@@ -59,8 +59,8 @@ void GameFrame::setStart()  // game entrance
     m_scene->createDiver({5, 3});
     m_scene->createPool();
     b2PolygonShape shape;
-    shape.SetAsBox(0.6*c_world_width, 0.2*c_world_height);
-    m_scene->createWater(shape, {0.5f*c_world_width, 0.6f*c_world_height});
+    shape.SetAsBox(0.3*c_world_width, 0.1*c_world_height);
+    m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
 }
 
 void GameFrame::setEnd()
