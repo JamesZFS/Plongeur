@@ -25,5 +25,9 @@ extern const int32 c_particle_iterations;
 extern const uint16 c_head_category;
 extern const uint16 c_limb_category;
 
+extern const float32 c_water_particle_radius;
+extern const float32 c_water_density;
+extern const float32 c_water_damping;
+
 
 #endif // CONSTANTS_H

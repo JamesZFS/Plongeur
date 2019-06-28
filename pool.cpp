@@ -32,7 +32,7 @@ Pool::Pool(b2Body *body) : Actor(body)
     QVector<b2PolygonShape> shapes(4);
     shapes[0].SetAsBox(t, 0.4f*h, {t, 0.5f*h}, 0);
     shapes[1].SetAsBox(0.5f*w, t, {0.5f*w, 0.9f*h}, 0);
-    shapes[2].SetAsBox(0.2*w, 0.5f*t, {0.2f*w, 0.2f*h}, 0);
+//    shapes[2].SetAsBox(0.2*w, 0.5f*t, {0.2f*w, 0.2f*h}, 0);
     shapes[3].SetAsBox(t, 0.2f*h, {w-t, 0.7f*h}, 0);
     foreach (const b2PolygonShape &shape, shapes) {
         def.shape = &shape;
@@ -40,7 +40,7 @@ Pool::Pool(b2Body *body) : Actor(body)
     }
 
     m_bbox = QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right));
-    m_bbox += QMarginsF(1, 1, 1, 1);
+    m_bbox += QMarginsF(5, 5, 5, 5);
 }
 
 void Pool::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

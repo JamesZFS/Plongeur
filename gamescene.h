@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "diver.h"
 #include "pool.h"
+#include "water.h"
 
 #include <QGraphicsScene>
 
@@ -21,7 +22,10 @@ public:
     void clear();
     void createPool();
     void createDiver(const b2Vec2 &pos);
-    void createWater(const b2PolygonShape &shape);
+    void createWater(const b2Shape &shape, const b2Vec2 &pos);
+
+    Actor* createDebugBall(const b2Vec2 &pos);
+    void destroyActor(Actor *actor);
 
 public slots:
     void asyncSimulate();
@@ -29,9 +33,12 @@ public slots:
     void stopSimulation();
 
 private:
+
     b2World *m_world;
     Pool *m_pool;
     Diver *m_diver;
+    Water *m_water;
+
     Engine *m_engine;
 };
 
