@@ -89,7 +89,6 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
 //    (b2RevoluteJoint*)part_bodies[0]->GetWorld()->CreateJoint(&rjd);
 
     // Arm to torso
-//    rjd.Initialize(part_bodies[1], part_bodies[2], b2Vec2(-0.1, -0.3));
     rjd.Initialize(m_l_arm.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(-0.1, -0.3));
     rjd.lowerAngle = 0.0f * b2_pi;
@@ -98,7 +97,6 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     world->CreateJoint(&rjd);
 
     // Leg to torso
-//    rjd.Initialize(part_bodies[1], part_bodies[4], b2Vec2(0, 0.4));
     rjd.Initialize(m_l_leg.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(0.0, 0.4));
     rjd.lowerAngle = 0.0f * b2_pi;
