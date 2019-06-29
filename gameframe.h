@@ -11,6 +11,7 @@ namespace Ui {
 class GameFrame;
 }
 
+// this class is responsible for taking control of the game logic
 class GameFrame : public QFrame
 {
     Q_OBJECT

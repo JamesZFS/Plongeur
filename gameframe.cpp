@@ -1,12 +1,12 @@
 #include "gameframe.h"
 #include "gamescene.h"
 #include "ui_gameframe.h"
+#include "engine.h"
 
 #include <QDebug>
 #include <QPainter>
 #include <QtEvents>
 #include <QGraphicsSceneMouseEvent>
-
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 GameFrame::GameFrame(QWidget *parent) :
@@ -147,9 +147,17 @@ bool GameFrame::eventFilter(QObject *watched, QEvent *event)
         auto me = (QGraphicsSceneMouseEvent*) event;
         auto pos = mapToB2(me->scenePos());
         qDebug() << "mouse clicked at" << pos.x << pos.y;
-        // add debug ball
-        auto ball = m_scene->createDebugBall(pos);
-        m_balls.push(ball);
+        if (me->button() == Qt::LeftButton) {
+            auto ball = dynamic_cast<Actor*>(m_scene->itemAt(me->scenePos(), {}));
+            if (!ball) goto finally;
+            m_scene->engine().requestImpulse(&ball->body(), {0, -3.f});
+        }
+        else {
+            // add debug ball
+            auto ball = m_scene->createDebugBall(pos);
+            m_balls.push(ball);
+        }
     }
+    finally:
     return QFrame::eventFilter(watched, event);
 }

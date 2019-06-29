@@ -40,6 +40,7 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
     void advance(int phase) override;
+    inline b2Body &body() { return *m_body; }
 
 protected:
     b2Body *const m_body;   // weak pointer to its b2body

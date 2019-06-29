@@ -110,6 +110,12 @@ Diver &GameScene::diver()
     return *m_diver;
 }
 
+Engine &GameScene::engine()
+{
+    Q_ASSERT(m_engine);
+    return *m_engine;
+}
+
 void GameScene::stopSimulation()
 {
     m_engine->stopSimulation();

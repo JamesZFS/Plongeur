@@ -27,7 +27,8 @@ public:
     // input requests:
     Actor* createDebugBall(const b2Vec2 &pos);
     void destroyActor(Actor *actor);
-    inline Diver &diver();
+    Diver &diver();
+    Engine &engine();
 
 public slots:
     void asyncSimulate();
