@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QtMath>
 
+static QColor s_skin_color(247, 210, 190);
 
 DiverPart::DiverPart(b2Body *body) : Actor(body), m_diver(nullptr)
 {
@@ -18,7 +19,6 @@ Diver *DiverPart::diver() const
 {
     return m_diver;
 }
-
 
 DiverHead::DiverHead(b2Body *body) : DiverPart(body)
 {
@@ -52,7 +52,7 @@ void DiverHead::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 {
     // draw head
     painter->setPen(QPen(Qt::black, 0.2));
-    painter->setBrush(QColor(247, 199, 185));
+    painter->setBrush(s_skin_color);
     painter->drawEllipse(scaleFromB2(-0.2), scaleFromB2(-0.8), 2 * m_r,2 *  m_r);
     // draw eye
 //    painter->rotate(-45);
@@ -79,6 +79,10 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     m_torso.setParentItem(this);
     m_arm.setParentItem(this);
     m_leg.setParentItem(this);
+
+    s_skin_color.setRed(s_skin_color.red() + qrand() % 11 - 5);
+    s_skin_color.setGreen(s_skin_color.green() + qrand() % 11 - 5);
+    s_skin_color.setBlue(s_skin_color.blue() + qrand() % 11 - 5);
 
     // joints:
     auto world = m_head.m_body->GetWorld();
@@ -145,7 +149,7 @@ void DiverTorso::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
     // draw torso
     painter->setPen(QPen(Qt::black, 0.2));
-    painter->setBrush(QColor(247, 199, 185));
+    painter->setBrush(s_skin_color);
     painter->drawRect(scaleFromB2(-0.2),scaleFromB2(-0.4), 2 * m_twidth, 2 * m_theight);
 
 
@@ -181,7 +185,7 @@ QRectF DiverLeg::boundingRect() const
 void DiverLeg::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(QPen(Qt::black, 0.2));
-    painter->setBrush(QColor(247, 199, 185));
+    painter->setBrush(s_skin_color);
     painter->drawRect(scaleFromB2(-0.1), scaleFromB2(0.4), 2 * m_twidth, 2 * m_theight);
 
 }
@@ -212,7 +216,7 @@ QRectF DiverArm::boundingRect() const
 void DiverArm::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(QPen(Qt::black, 0.2));
-    painter->setBrush(QColor(247, 199, 185));
+    painter->setBrush(s_skin_color);
     painter->drawRect(scaleFromB2(-0.2), scaleFromB2(-0.3), 2 * m_twidth, 2 * m_theight);
 }
 

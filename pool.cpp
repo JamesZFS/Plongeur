@@ -3,6 +3,9 @@
 
 #include <Box2D/Box2D.h>
 #include <QPainter>
+#include <QPixmap>
+
+QPixmap *Pool::s_texture = nullptr;
 
 Pool::Pool(b2Body *body) : Actor(body)
 {
@@ -14,20 +17,6 @@ Pool::Pool(b2Body *body) : Actor(body)
     def.friction = 0.5;
     def.restitution = 0.5;
     // pool fixture shape:
-//    b2Vec2 vertices[12];
-//    vertices[0].Set(-50, 200);
-//    vertices[1].Set(150, 200);
-//    vertices[2].Set(150, 150);
-//    vertices[3].Set(140, 150);
-//    vertices[4].Set(140, 190);
-//    vertices[5].Set(-40, 190);
-//    vertices[6].Set(-40, 18);
-//    vertices[7].Set(2, 18);
-//    vertices[8].Set(2, 14);
-//    vertices[9].Set(-40, 14);
-//    vertices[10].Set(-40, 10);
-//    vertices[11].Set(-50, 10);
-    //    polygonShape.Set(vertices, 4);
     auto w = c_world_width, h = c_world_height, t = 0.04f*w;   // half thickness
     QVector<b2PolygonShape> shapes(4);
     shapes[0].SetAsBox(t, 0.4f*h, {t, 0.5f*h}, 0);
@@ -41,28 +30,14 @@ Pool::Pool(b2Body *body) : Actor(body)
 
     m_bbox = QRectF(mapFromB2(c_world_top_left), mapFromB2(c_world_bottom_right));
     m_bbox += QMarginsF(5, 5, 5, 5);
+    Q_ASSERT(s_texture);
 }
 
 void Pool::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    // todo
-    //    QPoint points[12]= {
-    //        QPoint(-50, 200),
-    //        QPoint(150, 200),
-    //        QPoint(150, 150),
-    //        QPoint(140, 150),
-    //        QPoint(140, 190),
-    //        QPoint(-40, 190),
-    //        QPoint(-40, 18),
-    //        QPoint(2, 18),
-    //        QPoint(2, 14),
-    //        QPoint(-40, 14),
-    //        QPoint(-40, 10),
-    //        QPoint(-50, 10)
-
-    //    };
-    painter->setPen(QPen(Qt::black, 0.2));
-    painter->setBrush(QColor(150, 199, 185));
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(*s_texture);
+//    painter->setBrush(QColor(150, 199, 185));
     drawB2Fixtures(m_body->GetFixtureList(), painter);
 }
 

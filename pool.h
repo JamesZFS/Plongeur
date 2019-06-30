@@ -8,6 +8,7 @@ class Pool : public Actor
 {
 public:
     Pool(b2Body *body);
+    static QPixmap *s_texture;
 
 private:
     QRectF m_bbox;

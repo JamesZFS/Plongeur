@@ -69,6 +69,13 @@ void GameScene::createWater(const b2Shape &shape, const b2Vec2 &pos)
     advance();
 }
 
+void GameScene::initialize(size_t step)
+{
+    Q_ASSERT(!m_engine->isBusy());
+    for (size_t i = 0; i < step; ++i)
+        m_world->Step(c_time_step, c_velocity_iterations, c_position_iterations, c_particle_iterations);
+}
+
 Actor *GameScene::createDebugBall(const b2Vec2 &pos)
 {
     bool flag = m_engine->isBusy();

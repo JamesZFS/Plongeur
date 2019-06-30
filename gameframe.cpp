@@ -50,9 +50,10 @@ void GameFrame::setStart()  // game entrance, start/restart
     ui->graphicsView->setScene(m_scene);
     m_scene->createPool();
     b2PolygonShape shape;
-    shape.SetAsBox(0.4*c_world_width, 0.1*c_world_height);
-    m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
-    m_scene->createDiver({6.6, 3.3});
+    shape.SetAsBox(0.42*c_world_width, 0.1*c_world_height);
+    m_scene->createWater(shape, {0.5f*c_world_width, 0.77f*c_world_height});
+//    m_scene->initialize(100);   // block
+    m_scene->createDiver({6.8, 3.3});
     m_scene->asyncSimulate();
     connect(&m_scene->engine(), SIGNAL(diverHitsWater(double)), this, SLOT(calculateScore(double)));
 }

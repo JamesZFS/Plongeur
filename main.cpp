@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "pool.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -7,6 +8,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Tsinghua");
     QCoreApplication::setApplicationName("Plongeur");
     QCoreApplication::setApplicationVersion(QT_VERSION_STR);
+
+    Pool::s_texture = new QPixmap(QPixmap(":/images/resources/tile2.jpg").scaledToHeight(28));
 
     MainWindow w;
     w.show();

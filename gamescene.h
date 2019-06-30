@@ -23,6 +23,7 @@ public:
     void createPool();
     void createDiver(const b2Vec2 &pos);
     void createWater(const b2Shape &shape, const b2Vec2 &pos);
+    void initialize(size_t step);
 
     // input requests:
     Actor* createDebugBall(const b2Vec2 &pos);
