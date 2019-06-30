@@ -1,3 +1,4 @@
+
 #include "diver.h"
 
 #include <Box2D/Box2D.h>
@@ -57,6 +58,7 @@ void DiverHead::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 }
 
 Diver::Diver(QVector<b2Body *> part_bodies) :
+    m_state(e_ON_PLATFORM),
     m_head(part_bodies[0]), m_torso(part_bodies[1]),
     m_l_arm(part_bodies[2]), m_r_arm(part_bodies[3]),
     m_l_leg(part_bodies[4]), m_r_leg(part_bodies[5])
@@ -81,13 +83,6 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     world->CreateJoint(&djd);
 
     b2RevoluteJointDef rjd;
-//    rjd.Initialize(part_bodies[1], part_bodies[0], b2Vec2(0, 0.39)); //centerX, centerY + 0.39));
-//    rjd.motorSpeed = 0.0f * b2_pi;
-//    rjd.maxMotorTorque = 10.0f;
-//    rjd.enableMotor = true;
-//    rjd.collideConnected = false;
-//    (b2RevoluteJoint*)part_bodies[0]->GetWorld()->CreateJoint(&rjd);
-
     // Arm to torso
     rjd.Initialize(m_l_arm.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(-0.1, -0.3));
@@ -203,4 +198,25 @@ void DiverArm::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setPen(QPen(Qt::black, 0.2));
     painter->setBrush(QColor(247, 199, 185));
     painter->drawRect(scaleFromB2(-0.2), scaleFromB2(-0.3), 2 * m_twidth, 2 * m_theight);
+}
+
+void Diver::jump()
+{
+    if (m_state != e_ON_PLATFORM) return;
+    static int jumpcount = 0;
+    jumpcount++;
+    if (jumpcount < 3) m_torso.m_body->SetLinearVelocity(b2Vec2(0, -25));
+    else if (jumpcount == 3) m_torso.m_body->SetLinearVelocity(b2Vec2(70 * cosf(0.42 * b2_pi) / 3, -70 * sinf(0.42 * b2_pi) / 3));
+}
+
+void Diver::turnLeft()
+{
+    if (m_state != e_IN_AIR) return;
+    m_torso.m_body->SetAngularVelocity(-15.0);
+}
+
+void Diver::turnRight()
+{
+    if (m_state != e_IN_AIR) return;
+    m_torso.m_body->SetAngularVelocity(15.0);
 }

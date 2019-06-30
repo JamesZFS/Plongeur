@@ -26,11 +26,8 @@ void GameScene::clear()
     QGraphicsScene::clear();
     delete m_world;
     m_world = new b2World(c_gravity);
-    delete m_pool;
     m_pool = nullptr;
-    delete m_diver;
     m_diver = nullptr;
-    delete m_water;
 }
 
 void GameScene::createPool()
@@ -102,6 +99,12 @@ void GameScene::destroyActor(Actor *actor)
     advance();
     if (flag)
         m_engine->asyncSimulate();
+}
+
+Diver &GameScene::diver()
+{
+    Q_ASSERT(m_diver);
+    return *m_diver;
 }
 
 void GameScene::stopSimulation()

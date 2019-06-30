@@ -73,6 +73,15 @@ class Diver : public QGraphicsObject
 {
 public:
     Diver(QVector<b2Body *> part_bodies);  // initialize via 6 empty bodies created by b2world
+    void jump();
+    void turnLeft();
+    void turnRight();
+
+    enum State {
+        e_ON_PLATFORM = 0,
+        e_IN_AIR,
+        e_IN_WATER
+    } m_state;
 
 private:
     // hiding methods:

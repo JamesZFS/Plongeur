@@ -24,8 +24,10 @@ public:
     void createDiver(const b2Vec2 &pos);
     void createWater(const b2Shape &shape, const b2Vec2 &pos);
 
+    // input requests:
     Actor* createDebugBall(const b2Vec2 &pos);
     void destroyActor(Actor *actor);
+    Diver &diver();
 
 public slots:
     void asyncSimulate();
@@ -40,6 +42,7 @@ private:
     Water *m_water;
 
     Engine *m_engine;
+
 };
 
 #endif // GAMESCENE_H

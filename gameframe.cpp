@@ -2,6 +2,8 @@
 #include "gamescene.h"
 #include "ui_gameframe.h"
 
+#include "constants.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QtEvents>
@@ -12,6 +14,7 @@
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent), ui(new Ui::GameFrame),
     m_scene(new GameScene),
+    m_timer(),
     m_cur_key(""), m_score(0),
     m_is_started(false), m_is_paused(false), m_is_finished(false)
 {
@@ -40,6 +43,10 @@ GameFrame::GameFrame(QWidget *parent) :
         ui->bt_async->setEnabled(true);
         ui->bt_stop->setEnabled(false);
     });
+    connect(&m_timer, &QTimer::timeout, this, [this](){ m_keep_doing(); });
+    m_timer.setInterval(1000 * c_time_step);
+    m_keep_doing = nullptr;
+    m_pressed_key = Qt::Key_unknown;
 }
 
 GameFrame::~GameFrame()
@@ -92,29 +99,43 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
 {
     // todo
     Q_ASSERT(m_is_started);
-    switch (event->key()) {
-    case Qt::Key_A:
-        putKey("←");
-        break;
-    case Qt::Key_D:
-        putKey("→");
-        break;
-    case Qt::Key_S:
-        putKey("↓");
-        break;
-    case Qt::Key_W:
-        putKey("↑");
-        break;
-    case Qt::Key_Space:
-        putKey("[space]");
-        break;
-    default:
-        QFrame::keyPressEvent(event);
+    auto &diver = m_scene->diver();
+    if (m_pressed_key == Qt::Key_unknown) {
+        m_pressed_key = event->key();
+        switch (m_pressed_key) {
+        case Qt::Key_A:
+            putKey("←");
+            m_keep_doing = [&diver](){ diver.turnLeft(); };
+            m_timer.start();
+            break;
+        case Qt::Key_D:
+            putKey("→");
+            m_keep_doing = [&diver](){ diver.turnRight(); };
+            m_timer.start();
+            break;
+        case Qt::Key_S:
+            putKey("↓");
+            break;
+        case Qt::Key_W:
+            putKey("↑");
+            break;
+        case Qt::Key_Space:
+            putKey("[space]");
+            diver.jump();
+            break;
+        default:
+            QFrame::keyPressEvent(event);
+        }
     }
+    else
+        QFrame::keyPressEvent(event);
 }
 
 void GameFrame::keyReleaseEvent(QKeyEvent *event)
 {
+    // Mark the key as released.
+    m_pressed_key = Qt::Key_unknown;
+    m_timer.stop();
     m_cur_key = "";
     update();
     QFrame::keyPressEvent(event);
@@ -130,7 +151,6 @@ void GameFrame::closeEvent(QCloseEvent *event)
 void GameFrame::putKey(const QString &key)
 {
     m_cur_key = key;
-    ++m_score;    // score up
     update();
 }
 
