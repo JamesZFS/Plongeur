@@ -97,16 +97,16 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     // Arm to torso
     rjd.Initialize(m_arm.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(-0.1, -0.3));
-    rjd.lowerAngle = -0.5f * b2_pi;
-    rjd.upperAngle = 0.5f * b2_pi;
+    rjd.lowerAngle = -0.4f * b2_pi;
+    rjd.upperAngle = +0.4f * b2_pi;
     rjd.enableLimit = true;
     world->CreateJoint(&rjd);
 
     // Leg to torso
     rjd.Initialize(m_leg.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(0.0, 0.4));
-    rjd.lowerAngle = -0.5f * b2_pi;
-    rjd.upperAngle = 0.5f * b2_pi;
+    rjd.lowerAngle = -0.4f * b2_pi;
+    rjd.upperAngle = +0.4f * b2_pi;
     world->CreateJoint(&rjd);
 
 }
@@ -248,8 +248,17 @@ void Diver::swim()
     auto toward = m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter();
     m_torso.m_body->ApplyForceToCenter(5*toward, true);
     x += c_time_step;
-    m_arm.m_body->SetAngularVelocity(8*sinf(2*b2_pi * x));
-    m_leg.m_body->SetAngularVelocity(-8*sinf(2*b2_pi * x));
+    m_arm.m_body->ApplyTorque(+1.0*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_arm.m_body->GetAngle()), true);
+    m_leg.m_body->ApplyTorque(-0.3*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_leg.m_body->GetAngle()), true);
+}
+
+void Diver::pose()
+{
+    if (m_state != e_IN_AIR) return;
+    static int sgn = 1;
+    m_arm.m_body->ApplyAngularImpulse(+0.3*sgn, true);
+    m_leg.m_body->ApplyAngularImpulse(+0.3*sgn, true);
+    sgn = -sgn;
 }
 
 void Diver::freeze(bool flag)

@@ -83,6 +83,7 @@ public:
     void turnLeft();
     void turnRight();
     void swim();
+    void pose();
     void freeze(bool flag);  // freeze rotation, to stand straight
 
 private:

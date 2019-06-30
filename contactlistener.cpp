@@ -15,6 +15,7 @@ void ContactListener::BeginContact(b2Contact *contact)
         other = actorA;
     }
     if (!diver_part) return; // not relating to diver
+    if (diver_part->diver()->m_state == Diver::e_IN_WATER) return;
     auto *pool = dynamic_cast<Pool*>(other);
     if (!pool) return;
     // diver landing on pool

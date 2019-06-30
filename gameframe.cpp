@@ -115,6 +115,7 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
             break;
         case Qt::Key_S:
             putKey("↓");
+            diver.pose();
             break;
         case Qt::Key_W:
             putKey("↑");
