@@ -44,19 +44,24 @@ void ContactListener::EndContact(b2Contact *contact)
 void ContactListener::BeginContact(b2ParticleSystem *particleSystem, b2ParticleBodyContact *particleBodyContact)
 {
     auto actor = (Actor*)particleBodyContact->body->GetUserData();
-    auto diver_part = dynamic_cast<DiverPart*>(actor);
-    if (!diver_part) return;
+    auto diver_torso = dynamic_cast<DiverTorso*>(actor);
+    if (!diver_torso) return;
     // diver hits water
-    diver_part->diver()->m_state = Diver::e_IN_WATER;
+    auto diver = diver_torso->diver();
+    diver->m_state = Diver::e_IN_WATER;
     if (m_first_hit) {
         emit diverHitsWater();
         m_first_hit = false;
     }
     if (m_measuring) {
+//        if (particleBodyContact->weight > 0.5)
+//            ++m_splash;
         auto vp = particleSystem->GetVelocityBuffer()[particleBodyContact->index];
         auto vb = particleBodyContact->body->GetLinearVelocity();
         auto vr = vb - vp;
-        m_splash += b2Abs(b2Dot(vr, particleBodyContact->normal)) * particleBodyContact->weight;
+        auto d = diver->getDirection();
+        m_splash += b2Abs(b2Dot(vr, {-d.y, d.x})) * particleBodyContact->weight;
+        ++m_measure_count;
     }
 }
 
@@ -64,12 +69,13 @@ void ContactListener::startMeasuring()
 {
     m_measuring = true;
     m_splash = 0;
+    m_measure_count = 0;
 }
 
 double ContactListener::stopMeasuring()
 {
     m_measuring = false;
-    return m_splash;
+    return m_splash / m_measure_count;
 }
 
 bool ContactListener::isMeasuring() const

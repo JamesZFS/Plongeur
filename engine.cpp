@@ -80,7 +80,7 @@ void Engine::stepWorld()
     if (m_contact_listener->isMeasuring()) {
         --m_measures_left;
         if (m_measures_left == 0) {
-            emit diverHitsWater(m_contact_listener->stopMeasuring() / c_measure_iters);
+            emit diverHitsWater(m_contact_listener->stopMeasuring());
         }
     }
     emit stepped();

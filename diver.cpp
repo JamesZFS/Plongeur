@@ -222,7 +222,7 @@ void Diver::jump()
     m_n_jump++;
     if (m_n_jump < 3) m_torso.m_body->SetLinearVelocity(b2Vec2(0, -5));
     else if (m_n_jump == 3) m_torso.m_body->SetLinearVelocity(b2Vec2(80 * cosf(0.42 * b2_pi) / 3, -40 * sinf(0.42 * b2_pi) / 3));
-    else m_torso.m_body->SetLinearVelocity(5*(m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter()));
+    else m_torso.m_body->SetLinearVelocity(5*getDirection());
 }
 
 void Diver::turnLeft()
@@ -241,8 +241,7 @@ void Diver::swim()
 {
     if (m_state != e_IN_WATER) return;
     static float32 x = 0;
-    auto toward = m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter();
-    m_torso.m_body->ApplyForceToCenter(5*toward, true);
+    m_torso.m_body->ApplyForceToCenter(7*getDirection(), true);
     x += c_time_step;
     m_arm.m_body->ApplyTorque(+1.0*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_arm.m_body->GetAngle()), true);
     m_leg.m_body->ApplyTorque(-0.3*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_leg.m_body->GetAngle()), true);
@@ -266,7 +265,14 @@ void Diver::freeze(bool flag)
     m_leg.body().SetFixedRotation(flag);
 }
 
-float32 Diver::getAngle()
+float32 Diver::getAngle() const
 {
     return qRadiansToDegrees(m_torso.m_body->GetAngle());
+}
+
+b2Vec2 Diver::getDirection() const
+{
+    auto d = m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter();
+    d.Normalize();
+    return d;
 }

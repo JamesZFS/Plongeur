@@ -151,10 +151,15 @@ void GameFrame::onDiverHitsWater(double splash)
     // calculate difficulty scores
     qDebug() << "splash" << splash;
     auto rounds = fabs(m_scene->diver().getAngle()) / 360;
-    qDebug() << "torso rotated" << rounds << "rounds";
     m_score += c_score_per_round * rounds;
-    m_score *= 1.0 / splash;
-    qDebug() << "scores:" << m_score << "\n";
+
+    qDebug() << "difficulty score" << m_score;
+    double subj = 1.1 - 0.1*splash - 0.2*splash*splash;    // interpolation: (0.5,1) (1.0,0.8) (2.0,0.1)
+    subj = std::max(subj, 0.1);
+    subj = std::min(subj, 1.0);
+    qDebug() << "subjective score" << 100 * subj;
+    m_score *= subj;
+    qDebug() << "final score:" << m_score << "\n";
 }
 
 bool GameFrame::eventFilter(QObject *watched, QEvent *event)

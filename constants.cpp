@@ -31,4 +31,4 @@ const float32 c_water_damping = 0.5f;
 
 const double c_score_per_pose = 20;
 const double c_score_per_round = 30;
-const size_t c_measure_iters = 10;
+const size_t c_measure_iters = 6;

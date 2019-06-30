@@ -85,7 +85,8 @@ public:
     int pose(); // return the score
     void swim();
     void freeze(bool flag);  // freeze rotation, to stand straight
-    float32 getAngle(); // in degrees
+    float32 getAngle() const; // in degrees
+    b2Vec2 getDirection() const;
 
 private:
     // hiding methods:

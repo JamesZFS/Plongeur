@@ -26,6 +26,7 @@ private:
     bool m_first_hit = true;
     bool m_measuring = false;
     double m_splash = 0;
+    size_t m_measure_count = 0;
 };
 
 #endif // CONTACTLISTENER_H
