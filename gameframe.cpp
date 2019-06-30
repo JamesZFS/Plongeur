@@ -25,6 +25,7 @@ GameFrame::GameFrame(QWidget *parent) :
 
     m_scene->installEventFilter(this);
     connect(ui->bt_restart, SIGNAL(clicked(bool)), this, SLOT(setStart()));
+    connect(ui->bt_end, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(&m_timer, &QTimer::timeout, this, [this](){ m_keep_doing(); });
     m_timer.setInterval(1000 * c_time_step);
     m_keep_doing = nullptr;
@@ -41,6 +42,8 @@ void GameFrame::setStart()  // game entrance, start/restart
 {
     m_scene->stopSimulation();
     m_scene->clear();
+    m_balls.clear();
+    m_hit_water = false;
     m_is_started = true;
     m_is_finished = false;
     m_cur_score = 0;
@@ -49,7 +52,7 @@ void GameFrame::setStart()  // game entrance, start/restart
     b2PolygonShape shape;
     shape.SetAsBox(0.4*c_world_width, 0.1*c_world_height);
     m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
-    m_scene->createDiver({5.5, 3.3});
+    m_scene->createDiver({6.6, 3.3});
     m_scene->asyncSimulate();
     connect(&m_scene->engine(), SIGNAL(diverHitsWater(double)), this, SLOT(calculateScore(double)));
 }
@@ -117,16 +120,10 @@ void GameFrame::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void GameFrame::on_bt_remove_ball_clicked()
-{
-    if (m_balls.isEmpty())
-        return;
-    m_scene->destroyActor(m_balls.pop());
-}
-
 void GameFrame::calculateScore(double splash)
 {
     qDebug() << "onDiverHitsWater";
+    m_hit_water = true;
     // calculate difficulty scores:
     QPair<double, double> score;
     auto rounds = fabs(m_scene->diver().getAngle()) / 360;
@@ -170,7 +167,7 @@ void GameFrame::calculateScore(double splash)
 
 bool GameFrame::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_scene && event->type() == QEvent::GraphicsSceneMousePress) {
+    if (m_hit_water && watched == m_scene && event->type() == QEvent::GraphicsSceneMousePress) {
         auto me = (QGraphicsSceneMouseEvent*) event;
         auto pos = mapToB2(me->scenePos());
         qDebug() << "mouse clicked at" << pos.x << pos.y;

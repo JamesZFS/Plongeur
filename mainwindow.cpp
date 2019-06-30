@@ -35,6 +35,20 @@ void MainWindow::on_actionHelp_triggered()
 {
     qDebug("actionHelp()");
     // todo popup a help dialog
+    QString help =
+            "How to play Plongeur:\n"
+            "\n"
+            "Jump from the diving board and create an epic dive!\n"
+            "\n"
+            "Press SPACE to jump\n"
+            "Press A to spin left\n"
+            "Press D to spin right\n"
+            "Press S to pose\n"
+            "Press W to swim\n"
+            "\n"
+            "Tip: Enter the water vertically and increase the number of midair "
+            "rotations and poses to obtain a higher score!\n";
+    QMessageBox::information(this, "How To Play", help, QMessageBox::Ok);
 }
 
 void MainWindow::on_actionQuit_triggered()

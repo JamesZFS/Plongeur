@@ -42,8 +42,6 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void on_bt_remove_ball_clicked();
-
     void calculateScore(double splash);
 
 private:
@@ -52,6 +50,7 @@ private:
     QTimer m_timer;
     double m_cur_score;
     ScoreTable m_scores;   // history scores, difficulty scores and subjective scores
+    bool m_hit_water;
 
     bool m_is_started, m_is_finished;
 

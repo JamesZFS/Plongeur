@@ -221,7 +221,7 @@ void Diver::jump()
     if (m_state != e_ON_PLATFORM) return;
     m_n_jump++;
     if (m_n_jump < 3) m_torso.m_body->SetLinearVelocity(b2Vec2(0, -5));
-    else if (m_n_jump == 3) m_torso.m_body->SetLinearVelocity(b2Vec2(80 * cosf(0.42 * b2_pi) / 3, -40 * sinf(0.42 * b2_pi) / 3));
+    else if (m_n_jump == 3) m_torso.m_body->SetLinearVelocity(b2Vec2(10 * cosf(0.35 * b2_pi) , -10 * sinf(0.35 * b2_pi)));
     else m_torso.m_body->SetLinearVelocity(5*getDirection());
 }
 
