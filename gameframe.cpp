@@ -16,33 +16,15 @@ GameFrame::GameFrame(QWidget *parent) :
     m_scene(new GameScene),
     m_timer(),
     m_cur_key(""), m_score(0),
-    m_is_started(false), m_is_paused(false), m_is_finished(false)
+    m_is_started(false), m_is_finished(false)
 {
     ui->setupUi(this);
-    ui->bt_stop->setEnabled(false);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
 
     m_scene->installEventFilter(this);
-    connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
-        m_scene->syncSimulate();
-        ui->bt_sync->setEnabled(false);
-        ui->bt_async->setEnabled(false);
-        ui->bt_stop->setEnabled(true);
-    });
-    connect(ui->bt_async, &QPushButton::clicked, this, [this](){
-        m_scene->asyncSimulate();
-        ui->bt_sync->setEnabled(false);
-        ui->bt_async->setEnabled(false);
-        ui->bt_stop->setEnabled(true);
-    });
-    connect(ui->bt_stop, &QPushButton::clicked, this, [this](){
-        m_scene->stopSimulation();
-        ui->bt_sync->setEnabled(true);
-        ui->bt_async->setEnabled(true);
-        ui->bt_stop->setEnabled(false);
-    });
+    connect(ui->bt_restart, SIGNAL(clicked(bool)), this, SLOT(setStart()));
     connect(&m_timer, &QTimer::timeout, this, [this](){ m_keep_doing(); });
     m_timer.setInterval(1000 * c_time_step);
     m_keep_doing = nullptr;
@@ -55,31 +37,29 @@ GameFrame::~GameFrame()
     delete m_scene;
 }
 
-void GameFrame::setStart()  // game entrance
+void GameFrame::setStart()  // game entrance, start/restart
 {
+    m_scene->stopSimulation();
+    m_scene->clear();
     m_is_started = true;
-    m_is_paused = false;
     m_is_finished = false;
     m_cur_key = "";
     m_score = 0;
     ui->graphicsView->setScene(m_scene);
-    m_scene->createDiver({5.5, 3.3});
     m_scene->createPool();
     b2PolygonShape shape;
     shape.SetAsBox(0.4*c_world_width, 0.1*c_world_height);
     m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
+    m_scene->createDiver({5.5, 3.3});
+    m_scene->asyncSimulate();
 }
 
 void GameFrame::setEnd()
 {
     m_is_finished = true;
+    m_scene->stopSimulation();
+    m_scene->engine().wait();
     m_scene->clear();
-}
-
-void GameFrame::togglePause()
-{
-    Q_ASSERT(m_is_started);
-    m_is_paused = !m_is_paused;
 }
 
 double GameFrame::getScore() const

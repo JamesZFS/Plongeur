@@ -103,6 +103,7 @@ private:
     DiverTorso m_torso;
     DiverArm m_arm;//, m_r_arm;
     DiverLeg m_leg;//, m_r_leg;
+    int m_n_jump;
 
     // QGraphicsItem interface
 public:

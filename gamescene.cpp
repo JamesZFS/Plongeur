@@ -17,17 +17,22 @@ GameScene::GameScene() :
 
 GameScene::~GameScene()
 {
-    delete m_world;
-    delete m_engine;
+    clear();
 }
 
 void GameScene::clear()
 {
+    m_engine->stopSimulation();
+    m_engine->wait();
     QGraphicsScene::clear();
     delete m_world;
+    delete m_engine;
     m_world = new b2World(c_gravity);
+    m_engine = new Engine(m_world);
+    connect(m_engine, SIGNAL(stepped()), this, SLOT(advance()), Qt::QueuedConnection);
     m_pool = nullptr;
     m_diver = nullptr;
+    m_water = nullptr;
 }
 
 void GameScene::createPool()

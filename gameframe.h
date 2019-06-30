@@ -22,11 +22,10 @@ public:
     explicit GameFrame(QWidget *parent = 0);
     ~GameFrame();
 
+public slots:
     void setStart();    // start the game
 
     void setEnd();
-
-    void togglePause(); // pause / continue
 
     double getScore() const;
 
@@ -54,7 +53,7 @@ private:
     QString m_cur_key; // current key pressed
     double m_score;
 
-    bool m_is_started, m_is_paused, m_is_finished;
+    bool m_is_started, m_is_finished;
 
     QStack<Actor*> m_balls; // for debug
 
