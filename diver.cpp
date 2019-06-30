@@ -54,12 +54,12 @@ void DiverHead::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     painter->setBrush(QColor(247, 199, 185));
     painter->drawEllipse(scaleFromB2(-0.2), scaleFromB2(-0.8), 2 * m_r,2 *  m_r);
     // draw eye
-    painter->rotate(-45);
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::white);
-    painter->drawEllipse({0.5*m_r, 0}, 0.3*m_r, 0.3*m_r);
-    painter->setBrush(Qt::black);
-    painter->drawEllipse({0.7*m_r, 0}, 0.1*m_r, 0.1*m_r);
+//    painter->rotate(-45);
+//    painter->setPen(Qt::NoPen);
+//    painter->setBrush(Qt::white);
+//    painter->drawEllipse({0.5*m_r, 0}, 0.3*m_r, 0.3*m_r);
+//    painter->setBrush(Qt::black);
+//    painter->drawEllipse({0.7*m_r, 0}, 0.1*m_r, 0.1*m_r);
 }
 
 Diver::Diver(QVector<b2Body *> part_bodies) :
