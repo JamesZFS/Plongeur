@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include <QPainter>
+#include <QtMath>
 
 
 DiverPart::DiverPart(b2Body *body) : Actor(body), m_diver(nullptr)
@@ -247,13 +248,14 @@ void Diver::swim()
     m_leg.m_body->ApplyTorque(-0.3*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_leg.m_body->GetAngle()), true);
 }
 
-void Diver::pose()
+int Diver::pose()
 {
-    if (m_state != e_IN_AIR) return;
+    if (m_state != e_IN_AIR) return 0;
     static int sgn = 1;
     m_arm.m_body->ApplyAngularImpulse(+0.3*sgn, true);
     m_leg.m_body->ApplyAngularImpulse(+0.3*sgn, true);
     sgn = -sgn;
+    return c_score_per_pose;
 }
 
 void Diver::freeze(bool flag)
@@ -262,4 +264,9 @@ void Diver::freeze(bool flag)
     m_torso.body().SetFixedRotation(flag);
     m_arm.body().SetFixedRotation(flag);
     m_leg.body().SetFixedRotation(flag);
+}
+
+float32 Diver::getAngle()
+{
+    return qRadiansToDegrees(m_torso.m_body->GetAngle());
 }

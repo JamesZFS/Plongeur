@@ -46,6 +46,8 @@ protected:
 private slots:
     void on_bt_remove_ball_clicked();
 
+    void onDiverHitsWater();
+
 private:
     Ui::GameFrame *ui;
     GameScene *m_scene;

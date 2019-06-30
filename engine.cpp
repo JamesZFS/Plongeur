@@ -9,6 +9,7 @@ Engine::Engine(b2World *world) : QThread(),
 {
     m_contact_listener = new ContactListener;
     m_world->SetContactListener(m_contact_listener);
+    connect(m_contact_listener, &ContactListener::diverHitsWater, this, [this](){ emit diverHitsWater(); }, Qt::QueuedConnection);
 }
 
 Engine::~Engine()

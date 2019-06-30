@@ -41,11 +41,15 @@ void ContactListener::EndContact(b2Contact *contact)
     diver_part->diver()->freeze(false);
 }
 
-void ContactListener::BeginContact(b2ParticleSystem *particleSystem, b2ParticleBodyContact *particleBodyContact)
+void ContactListener::BeginContact(b2ParticleSystem *, b2ParticleBodyContact *particleBodyContact)
 {
     auto actor = (Actor*)particleBodyContact->body->GetUserData();
     auto diver_part = dynamic_cast<DiverPart*>(actor);
     if (!diver_part) return;
     // diver hits water
     diver_part->diver()->m_state = Diver::e_IN_WATER;
+    if (m_flag) {
+        emit diverHitsWater();
+        m_flag = false;
+    }
 }

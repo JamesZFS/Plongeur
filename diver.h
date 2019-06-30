@@ -82,9 +82,10 @@ public:
     void jump();
     void turnLeft();
     void turnRight();
+    int pose(); // return the score
     void swim();
-    void pose();
     void freeze(bool flag);  // freeze rotation, to stand straight
+    float32 getAngle(); // in degrees
 
 private:
     // hiding methods:

@@ -21,6 +21,7 @@ public:
 
 signals:
     void stepped(); // emitted after every call of stepWorld()
+    void diverHitsWater();
 
 public slots:
     void syncSimulate();    // in main thread

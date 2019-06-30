@@ -52,6 +52,7 @@ void GameFrame::setStart()  // game entrance, start/restart
     m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
     m_scene->createDiver({5.5, 3.3});
     m_scene->asyncSimulate();
+    connect(&m_scene->engine(), SIGNAL(diverHitsWater()), this, SLOT(onDiverHitsWater()));
 }
 
 void GameFrame::setEnd()
@@ -95,7 +96,7 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
             break;
         case Qt::Key_S:
             putKey("↓");
-            diver.pose();
+            m_score += diver.pose();
             break;
         case Qt::Key_W:
             putKey("↑");
@@ -142,6 +143,16 @@ void GameFrame::on_bt_remove_ball_clicked()
     if (m_balls.isEmpty())
         return;
     m_scene->destroyActor(m_balls.pop());
+}
+
+void GameFrame::onDiverHitsWater()
+{
+    qDebug() << "onDiverHitsWater";
+    // calculate difficulty scores
+    auto rounds = fabs(m_scene->diver().getAngle()) / 360;
+    qDebug() << "torso rotated" << rounds << "rounds";
+    m_score += c_score_per_round * rounds;
+    qDebug() << "scores:" << m_score << "\n";
 }
 
 bool GameFrame::eventFilter(QObject *watched, QEvent *event)
