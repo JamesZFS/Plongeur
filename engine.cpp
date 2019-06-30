@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "contactlistener.h"
 
 #include <QDebug>
 #include <Box2D/Box2D.h>
@@ -6,10 +7,13 @@
 Engine::Engine(b2World *world) : QThread(),
     m_world(world), m_timer(nullptr)
 {
+    m_contact_listener = new ContactListener;
+    m_world->SetContactListener(m_contact_listener);
 }
 
 Engine::~Engine()
 {
+    delete m_contact_listener;
     if (isRunning()) {
         m_should_stop = true;
         wait(1000);

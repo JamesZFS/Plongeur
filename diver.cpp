@@ -1,15 +1,21 @@
+
 #include "diver.h"
 
 #include <Box2D/Box2D.h>
 #include <QPainter>
 
 
-DiverPart::DiverPart(b2Body *body) : Actor(body)
+DiverPart::DiverPart(b2Body *body) : Actor(body), m_diver(nullptr)
 {
     body->SetType(b2_dynamicBody);
     body->SetLinearDamping(c_diver_linear_damping);
     body->SetAngularDamping(c_diver_angular_damping);
     // fixture is created in subclasses' constructor
+}
+
+Diver *DiverPart::diver() const
+{
+    return m_diver;
 }
 
 
@@ -57,18 +63,25 @@ void DiverHead::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 }
 
 Diver::Diver(QVector<b2Body *> part_bodies) :
+    m_state(e_IN_AIR),
     m_head(part_bodies[0]), m_torso(part_bodies[1]),
-    m_l_arm(part_bodies[2]), m_r_arm(part_bodies[3]),
-    m_l_leg(part_bodies[4]), m_r_leg(part_bodies[5])
+    m_arm(part_bodies[2]), //m_r_arm(part_bodies[3]),
+    m_leg(part_bodies[3]) //,m_r_leg(part_bodies[5])
 {
+    m_head.m_diver = this;
+    m_torso.m_diver = this;
+    m_arm.m_diver = this;
+//    m_r_arm.m_diver = this;
+    m_leg.m_diver = this;
+//    m_r_leg.m_diver = this;
     QGraphicsItem::setPos(0, 0);
     QGraphicsItem::setRotation(0);
     m_head.setParentItem(this);
     m_torso.setParentItem(this);
-    m_l_arm.setParentItem(this);
-    m_r_arm.setParentItem(this);
-    m_l_leg.setParentItem(this);
-    m_r_leg.setParentItem(this);
+    m_arm.setParentItem(this);
+//    m_r_arm.setParentItem(this);
+    m_leg.setParentItem(this);
+//    m_r_leg.setParentItem(this);
 
     // joints:
     auto world = m_head.m_body->GetWorld();
@@ -81,28 +94,29 @@ Diver::Diver(QVector<b2Body *> part_bodies) :
     world->CreateJoint(&djd);
 
     b2RevoluteJointDef rjd;
-//    rjd.Initialize(part_bodies[1], part_bodies[0], b2Vec2(0, 0.39)); //centerX, centerY + 0.39));
-//    rjd.motorSpeed = 0.0f * b2_pi;
-//    rjd.maxMotorTorque = 10.0f;
-//    rjd.enableMotor = true;
-//    rjd.collideConnected = false;
-//    (b2RevoluteJoint*)part_bodies[0]->GetWorld()->CreateJoint(&rjd);
-
     // Arm to torso
-    rjd.Initialize(m_l_arm.m_body, m_torso.m_body,
+    rjd.Initialize(m_arm.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(-0.1, -0.3));
-    rjd.lowerAngle = 0.0f * b2_pi;
-    rjd.upperAngle = 1.0f * b2_pi;
+    rjd.lowerAngle = -0.5f * b2_pi;
+    rjd.upperAngle = 0.5f * b2_pi;
     rjd.enableLimit = true;
     world->CreateJoint(&rjd);
 
     // Leg to torso
-    rjd.Initialize(m_l_leg.m_body, m_torso.m_body,
+    rjd.Initialize(m_leg.m_body, m_torso.m_body,
                    m_torso.m_body->GetPosition() + b2Vec2(0.0, 0.4));
-    rjd.lowerAngle = 0.0f * b2_pi;
-    rjd.upperAngle = 0.8f * b2_pi;
+    rjd.lowerAngle = -0.5f * b2_pi;
+    rjd.upperAngle = 0.5f * b2_pi;
     world->CreateJoint(&rjd);
 
+}
+
+void Diver::setPos(const b2Vec2 &pos)
+{
+    m_head.body().SetTransform(pos, 0);
+    m_torso.body().SetTransform(pos, 0);
+    m_arm.body().SetTransform(pos, 0);
+    m_leg.body().SetTransform(pos, 0);
 }
 
 DiverTorso::DiverTorso(b2Body *body) : DiverPart(body)
@@ -203,4 +217,45 @@ void DiverArm::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setPen(QPen(Qt::black, 0.2));
     painter->setBrush(QColor(247, 199, 185));
     painter->drawRect(scaleFromB2(-0.2), scaleFromB2(-0.3), 2 * m_twidth, 2 * m_theight);
+}
+
+void Diver::jump()
+{
+    if (m_state != e_ON_PLATFORM) return;
+    static int jumpcount = 0;
+    jumpcount++;
+    if (jumpcount < 3) m_torso.m_body->SetLinearVelocity(b2Vec2(0, -5));
+    else if (jumpcount == 3) m_torso.m_body->SetLinearVelocity(b2Vec2(80 * cosf(0.42 * b2_pi) / 3, -40 * sinf(0.42 * b2_pi) / 3));
+    else m_torso.m_body->SetLinearVelocity(5*(m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter()));
+}
+
+void Diver::turnLeft()
+{
+    if (m_state == e_ON_PLATFORM) return;
+    m_torso.m_body->ApplyTorque(-3.0, true);
+}
+
+void Diver::turnRight()
+{
+    if (m_state == e_ON_PLATFORM) return;
+    m_torso.m_body->ApplyTorque(3.0, true);
+}
+
+void Diver::swim()
+{
+    if (m_state != e_IN_WATER) return;
+    static float32 x = 0;
+    auto toward = m_head.m_body->GetWorldCenter() - m_torso.m_body->GetWorldCenter();
+    m_torso.m_body->ApplyForceToCenter(5*toward, true);
+    x += c_time_step;
+    m_arm.m_body->SetAngularVelocity(8*sinf(2*b2_pi * x));
+    m_leg.m_body->SetAngularVelocity(-8*sinf(2*b2_pi * x));
+}
+
+void Diver::freeze(bool flag)
+{
+    m_head.body().SetFixedRotation(flag);
+    m_torso.body().SetFixedRotation(flag);
+    m_arm.body().SetFixedRotation(flag);
+    m_leg.body().SetFixedRotation(flag);
 }

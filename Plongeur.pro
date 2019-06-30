@@ -34,7 +34,8 @@ SOURCES += \
     diver.cpp \
     pool.cpp \
     engine.cpp \
-    water.cpp
+    water.cpp \
+    contactlistener.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS += \
     diver.h \
     pool.h \
     engine.h \
-    water.h
+    water.h \
+    contactlistener.h
 
 FORMS += \
         mainwindow.ui \

@@ -3,6 +3,8 @@
 
 #include <QFrame>
 #include <QStack>
+#include <QTimer>
+#include <functional>
 
 class GameScene;
 class Actor;
@@ -48,12 +50,16 @@ private slots:
 private:
     Ui::GameFrame *ui;
     GameScene *m_scene;
+    QTimer m_timer;
     QString m_cur_key; // current key pressed
     double m_score;
 
     bool m_is_started, m_is_paused, m_is_finished;
 
     QStack<Actor*> m_balls; // for debug
+
+    std::function<void()> m_keep_doing;
+    int m_pressed_key;
 
     // QObject interface
 public:

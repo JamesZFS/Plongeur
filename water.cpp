@@ -17,6 +17,8 @@ Water::Water(b2ParticleSystem *particle_system, const b2Shape &water_shape, cons
 
     def.shape = &water_shape;
     def.position = pos;
+    def.flags |= b2_fixtureContactListenerParticle;
+    def.userData = this;
     m_particle_group = particle_system->CreateParticleGroup(def);
     qDebug() << "water count" << m_particle_system->GetParticleCount();
     m_pts = new QPointF[2*m_particle_system->GetParticleCount()];

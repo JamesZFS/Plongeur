@@ -4,12 +4,17 @@
 #include "actor.h"
 
 class Diver;
+class ContactListener;
 
 class DiverPart : public Actor
 {
     friend class Diver;
 public:
     DiverPart(b2Body *body);
+    Diver *diver() const;
+
+private:
+    Diver *m_diver;
 };
 
 
@@ -71,21 +76,32 @@ public:
 // Diver is just an aggregation of 6 DiverParts
 class Diver : public QGraphicsObject
 {
+    friend class ContactListener;
 public:
     Diver(QVector<b2Body *> part_bodies);  // initialize via 6 empty bodies created by b2world
+    void jump();
+    void turnLeft();
+    void turnRight();
+    void swim();
+    void freeze(bool flag);  // freeze rotation, to stand straight
 
 private:
     // hiding methods:
-    void setPos() {}
+    void setPos(const b2Vec2 &pos);
     void setRotation() {}
     void setScale() {}
     void setTransform() {}
 
     // private data:
+    enum State {
+        e_ON_PLATFORM = 0,
+        e_IN_AIR,
+        e_IN_WATER
+    } m_state;  // state is maintained by ContactListener class
     DiverHead m_head;
     DiverTorso m_torso;
-    DiverArm m_l_arm, m_r_arm;
-    DiverLeg m_l_leg, m_r_leg;
+    DiverArm m_arm;//, m_r_arm;
+    DiverLeg m_leg;//, m_r_leg;
 
     // QGraphicsItem interface
 public:

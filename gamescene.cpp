@@ -26,11 +26,8 @@ void GameScene::clear()
     QGraphicsScene::clear();
     delete m_world;
     m_world = new b2World(c_gravity);
-    delete m_pool;
     m_pool = nullptr;
-    delete m_diver;
     m_diver = nullptr;
-    delete m_water;
 }
 
 void GameScene::createPool()
@@ -49,7 +46,7 @@ void GameScene::createDiver(const b2Vec2 &pos)
     b2BodyDef def;
     def.position = pos;
     QVector<b2Body*> part_bodies;   // a diver has 6 body parts
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 4; ++i) {
         part_bodies << m_world->CreateBody(&def);  // create an empty b2body
     }
     // and then pass it to Diver() to construct a Diver with concrete shapes and physical attributes

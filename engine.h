@@ -8,6 +8,7 @@
 
 class b2World;
 class b2Body;
+class ContactListener;
 
 
 class Engine : public QThread
@@ -38,6 +39,7 @@ protected:
     void destroyTimer();
 
 private:
+    ContactListener *m_contact_listener;
     b2World *m_world;
     QTimer *m_timer;
     QMap<b2Body *, QPair<b2Vec2, float32>> m_transform_requests;
