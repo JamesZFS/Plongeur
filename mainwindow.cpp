@@ -46,7 +46,7 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::onGameEnd()
 {
     qDebug("onGameEnd()");
-    statDialog = new StatDialog(gameFrame.getScore());
+    statDialog = new StatDialog(gameFrame.getScores());
     statDialog->show();
 }
 

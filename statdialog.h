@@ -1,6 +1,8 @@
 #ifndef STATDIALOG_H
 #define STATDIALOG_H
 
+#include "gameframe.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -12,7 +14,7 @@ class StatDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit StatDialog(double score);
+    explicit StatDialog(ScoreTable scores);
     ~StatDialog();
 
 signals:

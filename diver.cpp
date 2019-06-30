@@ -241,10 +241,10 @@ void Diver::swim()
 {
     if (m_state != e_IN_WATER) return;
     static float32 x = 0;
-    m_torso.m_body->ApplyForceToCenter(7*getDirection(), true);
+    m_torso.m_body->ApplyForceToCenter(4*getDirection(), true);
     x += c_time_step;
-    m_arm.m_body->ApplyTorque(+1.0*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_arm.m_body->GetAngle()), true);
-    m_leg.m_body->ApplyTorque(-0.3*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_leg.m_body->GetAngle()), true);
+    m_arm.m_body->ApplyTorque(+1.2*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_arm.m_body->GetAngle()), true);
+    m_leg.m_body->ApplyTorque(-0.5*sinf(2*b2_pi*x) + 1.1*(m_torso.m_body->GetAngle() - m_leg.m_body->GetAngle()), true);
 }
 
 int Diver::pose()
