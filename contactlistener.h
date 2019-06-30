@@ -15,12 +15,17 @@ public:
     void BeginContact(b2Contact *contact) override;
     void EndContact(b2Contact *contact) override;
     void BeginContact(b2ParticleSystem *particleSystem, b2ParticleBodyContact *particleBodyContact) override;
+    void startMeasuring();  // start measuring water splash
+    double stopMeasuring(); // return the total splash
+    bool isMeasuring() const;
 
 signals:
     void diverHitsWater();
 
 private:
-    bool m_flag = true;
+    bool m_first_hit = true;
+    bool m_measuring = false;
+    double m_splash = 0;
 };
 
 #endif // CONTACTLISTENER_H

@@ -9,7 +9,10 @@ Engine::Engine(b2World *world) : QThread(),
 {
     m_contact_listener = new ContactListener;
     m_world->SetContactListener(m_contact_listener);
-    connect(m_contact_listener, &ContactListener::diverHitsWater, this, [this](){ emit diverHitsWater(); }, Qt::QueuedConnection);
+    connect(m_contact_listener, &ContactListener::diverHitsWater, this, [this](){
+        m_contact_listener->startMeasuring();
+        m_measures_left = c_measure_iters;
+    }, Qt::DirectConnection);
 }
 
 Engine::~Engine()
@@ -74,6 +77,12 @@ void Engine::stepWorld()
     }
     handleRequests();
     m_world->Step(c_time_step, c_velocity_iterations, c_position_iterations, c_particle_iterations);
+    if (m_contact_listener->isMeasuring()) {
+        --m_measures_left;
+        if (m_measures_left == 0) {
+            emit diverHitsWater(m_contact_listener->stopMeasuring() / c_measure_iters);
+        }
+    }
     emit stepped();
 }
 

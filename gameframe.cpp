@@ -52,7 +52,7 @@ void GameFrame::setStart()  // game entrance, start/restart
     m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
     m_scene->createDiver({5.5, 3.3});
     m_scene->asyncSimulate();
-    connect(&m_scene->engine(), SIGNAL(diverHitsWater()), this, SLOT(onDiverHitsWater()));
+    connect(&m_scene->engine(), SIGNAL(diverHitsWater(double)), this, SLOT(onDiverHitsWater(double)));
 }
 
 void GameFrame::setEnd()
@@ -145,13 +145,15 @@ void GameFrame::on_bt_remove_ball_clicked()
     m_scene->destroyActor(m_balls.pop());
 }
 
-void GameFrame::onDiverHitsWater()
+void GameFrame::onDiverHitsWater(double splash)
 {
     qDebug() << "onDiverHitsWater";
     // calculate difficulty scores
+    qDebug() << "splash" << splash;
     auto rounds = fabs(m_scene->diver().getAngle()) / 360;
     qDebug() << "torso rotated" << rounds << "rounds";
     m_score += c_score_per_round * rounds;
+    m_score *= 1.0 / splash;
     qDebug() << "scores:" << m_score << "\n";
 }
 
