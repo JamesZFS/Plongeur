@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include <QStack>
+#include <QTimer>
 
 class GameScene;
 class Actor;
@@ -41,18 +42,30 @@ protected:
 
     void putKey(const QString &key);
 
+protected slots:
+    void tick();
+
+private:
+    bool keyDown(int key) const;
+    bool keyPressed(int key) const;
+    bool keyReleased(int key) const;
+
 private slots:
     void on_bt_remove_ball_clicked();
 
 private:
     Ui::GameFrame *ui;
     GameScene *m_scene;
+    QTimer m_timer;
     QString m_cur_key; // current key pressed
     double m_score;
 
     bool m_is_started, m_is_paused, m_is_finished;
 
     QStack<Actor*> m_balls; // for debug
+
+    bool m_pressed[256];
+    bool m_pressedPrev[256];
 
     // QObject interface
 public:

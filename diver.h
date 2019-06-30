@@ -74,6 +74,10 @@ class Diver : public QGraphicsObject
 public:
     Diver(QVector<b2Body *> part_bodies);  // initialize via 6 empty bodies created by b2world
 
+    void jump();
+    void turnLeft();
+    void turnRight();
+
 private:
     // hiding methods:
     void setPos() {}

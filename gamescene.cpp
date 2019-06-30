@@ -104,6 +104,12 @@ void GameScene::destroyActor(Actor *actor)
         m_engine->asyncSimulate();
 }
 
+Diver &GameScene::diver()
+{
+    Q_ASSERT(m_diver);
+    return *m_diver;
+}
+
 void GameScene::stopSimulation()
 {
     m_engine->stopSimulation();

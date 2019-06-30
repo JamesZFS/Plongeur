@@ -2,6 +2,10 @@
 #include "gamescene.h"
 #include "ui_gameframe.h"
 
+#include "constants.h"
+
+#include <string>
+
 #include <QDebug>
 #include <QPainter>
 #include <QtEvents>
@@ -12,6 +16,7 @@
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent), ui(new Ui::GameFrame),
     m_scene(new GameScene),
+    m_timer(),
     m_cur_key(""), m_score(0),
     m_is_started(false), m_is_paused(false), m_is_finished(false)
 {
@@ -20,6 +25,11 @@ GameFrame::GameFrame(QWidget *parent) :
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
+
+    m_timer.setInterval(1000 * c_time_step);
+
+    std::memset(m_pressed, false, sizeof(m_pressed));
+    std::memset(m_pressedPrev, false, sizeof(m_pressedPrev));
 
     m_scene->installEventFilter(this);
     connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
@@ -40,6 +50,9 @@ GameFrame::GameFrame(QWidget *parent) :
         ui->bt_async->setEnabled(true);
         ui->bt_stop->setEnabled(false);
     });
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()), Qt::DirectConnection);
+
+    m_timer.start();
 }
 
 GameFrame::~GameFrame()
@@ -92,6 +105,11 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
 {
     // todo
     Q_ASSERT(m_is_started);
+
+    // Mark the key as pressed.
+    m_pressed[event->key()] = true;
+
+
     switch (event->key()) {
     case Qt::Key_A:
         putKey("←");
@@ -115,6 +133,9 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
 
 void GameFrame::keyReleaseEvent(QKeyEvent *event)
 {
+    // Mark the key as released.
+    m_pressed[event->key()] = false;
+
     m_cur_key = "";
     update();
     QFrame::keyPressEvent(event);
@@ -132,6 +153,40 @@ void GameFrame::putKey(const QString &key)
     m_cur_key = key;
     ++m_score;    // score up
     update();
+}
+
+void GameFrame::tick()
+{
+    if (!m_is_started) {
+        return;
+    }
+
+    Diver &diver = m_scene->diver();
+
+    if (keyPressed(Qt::Key_Space)) {
+        diver.jump();
+    }
+    if (keyDown(Qt::Key_A)) {
+        diver.turnLeft();
+    }
+    if (keyDown(Qt::Key_D)) {
+        diver.turnRight();
+    }
+
+    // Set the previous set of pressed keys.
+    std::memcpy(m_pressedPrev, m_pressed, sizeof(m_pressedPrev));
+}
+
+bool GameFrame::keyDown(int key) const {
+    return m_pressed[key];
+}
+
+bool GameFrame::keyPressed(int key) const {
+    return m_pressed[key] && !m_pressedPrev[key];
+}
+
+bool GameFrame::keyReleased(int key) const {
+    return !m_pressed[key] && m_pressedPrev[key];
 }
 
 void GameFrame::on_bt_remove_ball_clicked()
