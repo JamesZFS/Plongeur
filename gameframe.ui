@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Game Frame</string>
+   <string/>
   </property>
   <property name="lineWidth">
    <number>5</number>
@@ -23,44 +23,20 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="bt_sync">
+      <widget class="QPushButton" name="bt_restart">
        <property name="text">
-        <string>Sync Simulation</string>
+        <string>Retry</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bt_async">
+      <widget class="QPushButton" name="bt_end">
        <property name="text">
-        <string>Async Simulation</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bt_stop">
-       <property name="text">
-        <string>Stop Simulation</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bt_remove_ball">
-       <property name="text">
-        <string>remove ball</string>
+        <string>End</string>
        </property>
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="labelStatus">
-     <property name="text">
-      <string>Status</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>

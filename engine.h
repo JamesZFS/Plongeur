@@ -21,6 +21,7 @@ public:
 
 signals:
     void stepped(); // emitted after every call of stepWorld()
+    void diverHitsWater(double splash);
 
 public slots:
     void syncSimulate();    // in main thread
@@ -44,6 +45,7 @@ private:
     QTimer *m_timer;
     QMap<b2Body *, QPair<b2Vec2, float32>> m_transform_requests;
     QMap<b2Body *, b2Vec2> m_impulse_requests;
+    size_t m_measures_left;
 
     bool m_should_stop; // shared memory
 };

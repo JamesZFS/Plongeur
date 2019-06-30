@@ -82,9 +82,11 @@ public:
     void jump();
     void turnLeft();
     void turnRight();
+    int pose(); // return the score
     void swim();
-    void pose();
     void freeze(bool flag);  // freeze rotation, to stand straight
+    float32 getAngle() const; // in degrees
+    b2Vec2 getDirection() const;
 
 private:
     // hiding methods:
@@ -103,6 +105,7 @@ private:
     DiverTorso m_torso;
     DiverArm m_arm;//, m_r_arm;
     DiverLeg m_leg;//, m_r_leg;
+    int m_n_jump;
 
     // QGraphicsItem interface
 public:

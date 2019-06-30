@@ -28,3 +28,7 @@ const uint16 c_limb_category = 1 << 2;
 const float32 c_water_particle_radius = 0.08f;
 const float32 c_water_density = 1.0f;
 const float32 c_water_damping = 0.5f;
+
+const double c_score_per_pose = 10;
+const double c_score_per_round = 30;
+const size_t c_measure_iters = 6;

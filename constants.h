@@ -29,5 +29,8 @@ extern const float32 c_water_particle_radius;
 extern const float32 c_water_density;
 extern const float32 c_water_damping;
 
+extern const double c_score_per_pose;
+extern const double c_score_per_round;
+extern const size_t c_measure_iters;
 
 #endif // CONSTANTS_H

@@ -10,39 +10,22 @@
 #include <QtEvents>
 #include <QGraphicsSceneMouseEvent>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
+#include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 
 GameFrame::GameFrame(QWidget *parent) :
     QFrame(parent), ui(new Ui::GameFrame),
     m_scene(new GameScene),
-    m_timer(),
-    m_cur_key(""), m_score(0),
-    m_is_started(false), m_is_paused(false), m_is_finished(false)
+    m_is_started(false), m_is_finished(false)
 {
     ui->setupUi(this);
-    ui->bt_stop->setEnabled(false);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setBackgroundBrush(Qt::white);
     ui->graphicsView->scale(2, 2);
 
     m_scene->installEventFilter(this);
-    connect(ui->bt_sync, &QPushButton::clicked, this, [this](){
-        m_scene->syncSimulate();
-        ui->bt_sync->setEnabled(false);
-        ui->bt_async->setEnabled(false);
-        ui->bt_stop->setEnabled(true);
-    });
-    connect(ui->bt_async, &QPushButton::clicked, this, [this](){
-        m_scene->asyncSimulate();
-        ui->bt_sync->setEnabled(false);
-        ui->bt_async->setEnabled(false);
-        ui->bt_stop->setEnabled(true);
-    });
-    connect(ui->bt_stop, &QPushButton::clicked, this, [this](){
-        m_scene->stopSimulation();
-        ui->bt_sync->setEnabled(true);
-        ui->bt_async->setEnabled(true);
-        ui->bt_stop->setEnabled(false);
-    });
+    connect(ui->bt_restart, SIGNAL(clicked(bool)), this, SLOT(setStart()));
+    connect(ui->bt_end, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(&m_timer, &QTimer::timeout, this, [this](){ m_keep_doing(); });
     m_timer.setInterval(1000 * c_time_step);
     m_keep_doing = nullptr;
@@ -55,44 +38,36 @@ GameFrame::~GameFrame()
     delete m_scene;
 }
 
-void GameFrame::setStart()  // game entrance
+void GameFrame::setStart()  // game entrance, start/restart
 {
+    m_scene->stopSimulation();
+    m_scene->clear();
+    m_balls.clear();
+    m_hit_water = false;
     m_is_started = true;
-    m_is_paused = false;
     m_is_finished = false;
-    m_cur_key = "";
-    m_score = 0;
+    m_cur_score = 0;
     ui->graphicsView->setScene(m_scene);
-    m_scene->createDiver({5.5, 3.3});
     m_scene->createPool();
     b2PolygonShape shape;
     shape.SetAsBox(0.4*c_world_width, 0.1*c_world_height);
     m_scene->createWater(shape, {0.5f*c_world_width, 0.76f*c_world_height});
+    m_scene->createDiver({6.6, 3.3});
+    m_scene->asyncSimulate();
+    connect(&m_scene->engine(), SIGNAL(diverHitsWater(double)), this, SLOT(calculateScore(double)));
 }
 
 void GameFrame::setEnd()
 {
     m_is_finished = true;
+    m_scene->stopSimulation();
+    m_scene->engine().wait();
     m_scene->clear();
 }
 
-void GameFrame::togglePause()
+const ScoreTable &GameFrame::getScores() const
 {
-    Q_ASSERT(m_is_started);
-    m_is_paused = !m_is_paused;
-}
-
-double GameFrame::getScore() const
-{
-    Q_ASSERT(m_is_finished);
-    return m_score;
-}
-
-void GameFrame::paintEvent(QPaintEvent *event)  // paint game frame
-{
-    //    qDebug() << "GameFrame::paintEvent()";
-    ui->labelStatus->setText(QString("You've pressed: %0").arg(m_cur_key));
-    QFrame::paintEvent(event);
+    return m_scores;
 }
 
 void GameFrame::keyPressEvent(QKeyEvent *event)
@@ -104,26 +79,21 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
         m_pressed_key = event->key();
         switch (m_pressed_key) {
         case Qt::Key_A:
-            putKey("←");
             m_keep_doing = [&diver](){ diver.turnLeft(); };
             m_timer.start();
             break;
         case Qt::Key_D:
-            putKey("→");
             m_keep_doing = [&diver](){ diver.turnRight(); };
             m_timer.start();
             break;
         case Qt::Key_S:
-            putKey("↓");
-            diver.pose();
+            m_cur_score += diver.pose();
             break;
         case Qt::Key_W:
-            putKey("↑");
             m_keep_doing = [&diver]() { diver.swim(); };
             m_timer.start();
             break;
         case Qt::Key_Space:
-            putKey("[space]");
             diver.jump();
             break;
         default:
@@ -139,7 +109,6 @@ void GameFrame::keyReleaseEvent(QKeyEvent *event)
     // Mark the key as released.
     m_pressed_key = Qt::Key_unknown;
     m_timer.stop();
-    m_cur_key = "";
     update();
     QFrame::keyPressEvent(event);
 }
@@ -151,22 +120,54 @@ void GameFrame::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void GameFrame::putKey(const QString &key)
+void GameFrame::calculateScore(double splash)
 {
-    m_cur_key = key;
-    update();
-}
-
-void GameFrame::on_bt_remove_ball_clicked()
-{
-    if (m_balls.isEmpty())
-        return;
-    m_scene->destroyActor(m_balls.pop());
+    qDebug() << "onDiverHitsWater";
+    m_hit_water = true;
+    // calculate difficulty scores:
+    QPair<double, double> score;
+    auto rounds = fabs(m_scene->diver().getAngle()) / 360;
+    m_cur_score += c_score_per_round * rounds;
+    score.first = m_cur_score;
+    double subj = 1.1 - 0.1*splash - 0.2*splash*splash;    // interpolation: (0.5,1) (1.0,0.8) (2.0,0.1)
+    subj = std::max(subj, 0.1);
+    subj = std::min(subj, 1.0);
+    score.second = subj;
+    m_cur_score *= subj;
+    m_scores.push_back(score);
+    // display scores:
+    static const QFont score_font("arial", 8, 2);
+    auto dst = m_scene->addText(QString("Difficulty Score: %1").arg(QString::number(score.first, 'f', 2)), score_font);
+    auto sjt = m_scene->addText(QString("Subjective Score: %1%").arg(QString::number(score.second*100, 'f', 1)), score_font);
+    auto tst = m_scene->addText(QString("Total Score: %1").arg(QString::number(m_cur_score, 'f', 2)), score_font);
+    dst->setPos(1000, 0);
+    sjt->setPos(1000, 0);
+    tst->setPos(1000, 0);
+    auto anims = new QSequentialAnimationGroup;
+    auto pa = new QPropertyAnimation(dst, "pos");
+    pa->setStartValue(QPointF(200, 10));
+    pa->setEndValue(QPointF(100, 10));
+    pa->setEasingCurve(QEasingCurve::OutQuad);
+    pa->setDuration(300);
+    anims->addAnimation(pa);
+    pa = new QPropertyAnimation(sjt, "pos");
+    pa->setStartValue(QPointF(200, 25));
+    pa->setEndValue(QPointF(100, 25));
+    pa->setEasingCurve(QEasingCurve::OutQuad);
+    pa->setDuration(300);
+    anims->addAnimation(pa);
+    pa = new QPropertyAnimation(tst, "pos");
+    pa->setStartValue(QPointF(200, 40));
+    pa->setEndValue(QPointF(100, 40));
+    pa->setEasingCurve(QEasingCurve::OutQuad);
+    pa->setDuration(300);
+    anims->addAnimation(pa);
+    anims->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 bool GameFrame::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_scene && event->type() == QEvent::GraphicsSceneMousePress) {
+    if (m_hit_water && watched == m_scene && event->type() == QEvent::GraphicsSceneMousePress) {
         auto me = (QGraphicsSceneMouseEvent*) event;
         auto pos = mapToB2(me->scenePos());
         qDebug() << "mouse clicked at" << pos.x << pos.y;
