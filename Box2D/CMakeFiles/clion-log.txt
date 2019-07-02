@@ -1,0 +1,50 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE= -G "CodeBlocks - Unix Makefiles" /Users/james/Test/liquidfun-master/liquidfun/Box2D/Box2D
+CMake Warning at /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/Platform/Darwin-Initialize.cmake:125 (message):
+  Ignoring CMAKE_OSX_SYSROOT value:
+
+   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+
+  because the directory does not exist.
+Call Stack (most recent call first):
+  /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeSystemSpecificInitialize.cmake:21 (include)
+
+
+-- The C compiler identification is unknown
+-- The CXX compiler identification is unknown
+CMake Error in CMakeLists.txt:
+  The CMAKE_C_COMPILER:
+
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
+
+  is not a full path to an existing compiler tool.
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CC" or the CMake cache entry CMAKE_C_COMPILER to the full path to
+  the compiler, or to the compiler name if it is in the PATH.
+
+
+CMake Error in CMakeLists.txt:
+  The CMAKE_CXX_COMPILER:
+
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
+
+  is not a full path to an existing compiler tool.
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CXX" or the CMake cache entry CMAKE_CXX_COMPILER to the full path
+  to the compiler, or to the compiler name if it is in the PATH.
+
+
+CMake Warning (dev) in CMakeLists.txt:
+  No cmake_minimum_required command is present.  A line of code such as
+
+    cmake_minimum_required(VERSION 3.12)
+
+  should be added at the top of the file.  The version specified may be lower
+  if you wish to support older CMake versions for this project.  For more
+  information run "cmake --help-policy CMP0000".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/james/Test/liquidfun-master/liquidfun/Box2D/Box2D/CMakeFiles/CMakeOutput.log".
+See also "/Users/james/Test/liquidfun-master/liquidfun/Box2D/Box2D/CMakeFiles/CMakeError.log".
