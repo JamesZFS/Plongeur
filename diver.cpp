@@ -54,13 +54,6 @@ void DiverHead::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     painter->setPen(QPen(Qt::black, 0.2));
     painter->setBrush(s_skin_color);
     painter->drawEllipse(scaleFromB2(-0.2), scaleFromB2(-0.8), 2 * m_r,2 *  m_r);
-    // draw eye
-//    painter->rotate(-45);
-//    painter->setPen(Qt::NoPen);
-//    painter->setBrush(Qt::white);
-//    painter->drawEllipse({0.5*m_r, 0}, 0.3*m_r, 0.3*m_r);
-//    painter->setBrush(Qt::black);
-//    painter->drawEllipse({0.7*m_r, 0}, 0.1*m_r, 0.1*m_r);
 }
 
 Diver::Diver(QVector<b2Body *> part_bodies) :
@@ -150,7 +143,8 @@ void DiverTorso::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     // draw torso
     painter->setPen(QPen(Qt::black, 0.2));
     painter->setBrush(s_skin_color);
-    painter->drawRect(scaleFromB2(-0.2),scaleFromB2(-0.4), 2 * m_twidth, 2 * m_theight);
+    drawB2Fixtures(m_body->GetFixtureList(), painter);
+//    painter->drawRect(scaleFromB2(-0.2),scaleFromB2(-0.4), 2 * m_twidth, 2 * m_theight);
 
 
     // before implementing this, you should at least read the example DiverHead::paint above,

@@ -110,7 +110,6 @@ void GameFrame::keyReleaseEvent(QKeyEvent *event)
     // Mark the key as released.
     m_pressed_key = Qt::Key_unknown;
     m_timer.stop();
-    update();
     QFrame::keyPressEvent(event);
 }
 

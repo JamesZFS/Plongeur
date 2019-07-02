@@ -15,7 +15,7 @@ const float32 c_diver_linear_damping = 0.1;
 const float32 c_diver_angular_damping = 0.2;
 const float32 c_diver_density = 1.2;
 const float32 c_diver_friction = 0.6;
-const float32 c_diver_restitution = 0.2;
+const float32 c_diver_restitution = 0.1;
 
 const float32 c_time_step = 1.f / 60.f;
 const int32 c_velocity_iterations = 5;

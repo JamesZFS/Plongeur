@@ -29,7 +29,6 @@ StatDialog::StatDialog(ScoreTable scores) :
     item = new QTableWidgetItem("Total Score");
     table.setItem(0, 3, item);
     // table body:
-    qDebug() << scores;
     for (int i = 0; i < scores.size(); ++i) {
         table.insertRow(i+1);
         auto &sc = scores[i];
