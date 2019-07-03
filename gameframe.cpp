@@ -97,6 +97,12 @@ void GameFrame::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Space:
             diver.jump();
             break;
+        case Qt::Key_H:
+            diver.setPos({6.8, 3.3});
+            break;
+        case Qt::Key_L:
+            diver.setPos({6.8, 8.3});
+            break;
         default:
             QFrame::keyPressEvent(event);
         }

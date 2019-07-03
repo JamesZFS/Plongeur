@@ -3,6 +3,7 @@
 #include "diver.h"
 
 #include <QDebug>
+#include <QtMultimedia/QSoundEffect>
 
 void ContactListener::BeginContact(b2Contact *contact)
 {
@@ -47,6 +48,13 @@ void ContactListener::BeginContact(b2ParticleSystem *particleSystem, b2ParticleB
     auto diver_torso = dynamic_cast<DiverTorso*>(actor);
     if (!diver_torso) return;
     // diver hits water
+    // play the splash here
+    QSoundEffect effect;
+    effect.setSource(QUrl::fromLocalFile("/resources/slapsh.mp3"));
+    effect.setLoopCount(1);
+    effect.setVolume(0.25f);
+    effect.play();
+
     auto diver = diver_torso->diver();
     diver->m_state = Diver::e_IN_WATER;
     if (m_first_hit) {

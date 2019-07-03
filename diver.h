@@ -87,10 +87,10 @@ public:
     void freeze(bool flag);  // freeze rotation, to stand straight
     float32 getAngle() const; // in degrees
     b2Vec2 getDirection() const;
+    void setPos(const b2Vec2 &pos);
 
 private:
     // hiding methods:
-    void setPos(const b2Vec2 &pos);
     void setRotation() {}
     void setScale() {}
     void setTransform() {}

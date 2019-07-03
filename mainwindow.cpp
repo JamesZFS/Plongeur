@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QCloseEvent>
+#include <QtMultimedia/QSoundEffect>
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -11,6 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug("Welcome to Plongeur, a high diving game with awesome water effect "
            "powered by Liquidfun™.");
     ui->setupUi(this);
+
+    //Set Background :
+    QPixmap bkgnd("/resources/background.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, bkgnd);
+    this->setPalette(palette);
+
+
     connect(ui->btPlay, &QPushButton::clicked, ui->actionPlay, &QAction::trigger);
     connect(ui->btHelp, &QPushButton::clicked, ui->actionHelp, &QAction::trigger);
     connect(ui->btQuit, &QPushButton::clicked, ui->actionQuit, &QAction::trigger);
@@ -60,6 +70,14 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::onGameEnd()
 {
     qDebug("onGameEnd()");
+    //Play the high score sound here
+
+    QSoundEffect effect;
+    effect.setSource(QUrl::fromLocalFile("/resources/applause.mp3"));
+    effect.setLoopCount(1);
+    effect.setVolume(0.25f);
+    effect.play();
+
     statDialog = new StatDialog(gameFrame.getScores());
     statDialog->show();
 }
