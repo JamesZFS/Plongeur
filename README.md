@@ -1,6 +1,6 @@
 # OOP Team Project Document
 
-[TOC]
+
 
 ## Team Members
 
